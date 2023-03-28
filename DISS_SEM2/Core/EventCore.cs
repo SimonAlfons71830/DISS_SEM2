@@ -21,7 +21,7 @@ namespace DISS_SEM2.Core
         {
             this.timeline = new SimplePriorityQueue<Event, double>();
             this.currentTime = 0;
-            this.AddEvent(new CustomerArrival(this, 0, new Customer(0, new Car(((STK)this).generateCarType())), null,null));
+            this.AddEvent(new CustomerArrival(this, 0, new Customer(0, new Car(((STK)this).carTypeGenerator.Next())), null,null));
 
         }
         public override void AfterReplication()
@@ -31,7 +31,7 @@ namespace DISS_SEM2.Core
 
         public override void Replication()
         {
-            this.Simulate(100000000);
+            this.Simulate(28800);
             //8 hodin
         }
 

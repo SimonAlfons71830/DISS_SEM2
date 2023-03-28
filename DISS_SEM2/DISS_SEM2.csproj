@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Generators\CarGenerator.cs" />
     <Compile Include="Objects\Cars\CarTypes.cs" />
     <Compile Include="Objects\People\Automechanic.cs" />
     <Compile Include="Objects\Cars\Car.cs" />

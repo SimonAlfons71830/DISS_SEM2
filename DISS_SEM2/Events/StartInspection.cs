@@ -13,16 +13,16 @@ namespace DISS_SEM2.Events
         public StartInspection(EventCore _core, double _time, Customer _customer, Technician _technician, Automechanic _automechanic) : base(_core, _time, _customer, _technician, _automechanic)
         {
         }
-        public void execute()
+        public override void execute()
         {
             automechanic.obsluhuje = true;
 
             double timeOfInspection; ;
-            if (automechanic.car.type == Objects.Cars.CarTypes.Personal)
+            if (automechanic.customer_car.getCar().type == Objects.Cars.CarTypes.Personal)
             {
                 timeOfInspection = ((STK)core).personalCarInspectionGenerator.Next();
             }
-            else if (automechanic.car.type == Objects.Cars.CarTypes.Van)
+            else if (automechanic.customer_car.getCar().type == Objects.Cars.CarTypes.Van)
             {
                 timeOfInspection = ((STK)core).vanCarInspectionGenerator.Next();
             }

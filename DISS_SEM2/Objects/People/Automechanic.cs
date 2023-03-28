@@ -8,7 +8,7 @@ namespace DISS_SEM2
 {
     public class Automechanic
     {
-        public Car car;
+        public Customer customer_car;
         public bool obsluhuje;
 
         public Automechanic()

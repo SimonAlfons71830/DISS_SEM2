@@ -14,9 +14,9 @@ namespace DISS_SEM2.Events
         {
         }
 
-        public void execute()
+        public override void execute()
         {
-            technician.obsluhuje = true;
+            //technician.obsluhuje = true;
             var payingCustomer = ((STK)core).getCustomerInPaymentLine(); //uz je osetrene ci tam niekto je
             ((STK)core).removeCustomerFromPaymentLine(payingCustomer);
             //zaplatil naplanuje event odchod

@@ -15,6 +15,8 @@ namespace DISS_SEM2
         [STAThread]
         static void Main()
         {
+            var stk = new STK();
+            stk.Simulation();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());

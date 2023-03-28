@@ -17,9 +17,9 @@ namespace DISS_SEM2.Core
         private List<Technician> technicians;
         private List<Automechanic> automechanics;
         //parkovacie miesta v dielni, ako list sa lepsie pristupuje k ukladaniu objektu na prve volne miesto
-        private List<Car> garageParkingSpace;
+        private List<Customer> garageParkingSpace;
         //parkovacie miesta pred dielnou
-        private List<Car> parkingLot;
+        private List<Customer> parkingLot;
 
         //generator nasad
         private SeedGenerator seedGenerator;
@@ -32,7 +32,7 @@ namespace DISS_SEM2.Core
         public DiscreteEven personalCarInspectionGenerator { get; set; }
         public EmpiricalDistribution vanCarInspectionGenerator { get; set; }
         public EmpiricalDistribution cargoCarInspectionGenerator { get; set; }
-
+        public CarGenerator carTypeGenerator { get; set; }
         //boolean obsluhuje
         public bool obsluhuje { get; set; }
 
@@ -46,7 +46,7 @@ namespace DISS_SEM2.Core
             this.customersLine = new List<Customer>();
             this.paymentLine = new List<Customer>();
             this.seedGenerator = new SeedGenerator();
-            double _mi = 60 / 23;
+            double _mi = 3600.0 / 23.0;
             this.customerArrivalTimeGenerator = new Exponential(this.seedGenerator, _mi);
             this.takeOverTimeGenerator = new Triangular(this.seedGenerator, 180, 695, 431);
             //??
@@ -65,8 +65,8 @@ namespace DISS_SEM2.Core
                 this.automechanics.Add(new Automechanic());
             }
 
-            garageParkingSpace = new List<Car>();
-            parkingLot = new List<Car>();
+            garageParkingSpace = new List<Customer>();
+            parkingLot = new List<Customer>();
 
             paymentTimeGenerator = new ContinuousEven(65, 177, this.seedGenerator); //<65,177)
             personalCarInspectionGenerator = new DiscreteEven(31, 35, this.seedGenerator);
@@ -86,6 +86,7 @@ namespace DISS_SEM2.Core
             (56,54,0.05)
             };
             cargoCarInspectionGenerator = new EmpiricalDistribution(cargoRanges,this.seedGenerator);
+            this.carTypeGenerator = new CarGenerator(this.seedGenerator);
         }
 
         public void addCustomerToLine(Customer _customer)
@@ -149,10 +150,10 @@ namespace DISS_SEM2.Core
 
         public int getCustomersCountInPaymentLine()
         { 
-            return this.customersLine.Count;
+            return this.paymentLine.Count;
         }
 
-        public CarTypes generateCarType() 
+        /*public CarTypes generateCarType() 
         {
             var genNumber = carGenerator.Next();
 
@@ -168,7 +169,7 @@ namespace DISS_SEM2.Core
             {
                 return CarTypes.Cargo;
             }
-        }
+        }*/
 
         public void addTechnician() 
         {
@@ -217,25 +218,25 @@ namespace DISS_SEM2.Core
         {
             return this.garageParkingSpace.Count;
         }
-        public void parkCarInGarage(Car _car)
+        public void parkCarInGarage(Customer _customer_car)
         {
-            this.garageParkingSpace.Add(_car);
+            this.garageParkingSpace.Add(_customer_car);
         }
-        public bool removeCarFromGarage(Car _car)
+        public bool removeCarFromGarage(Customer _customer_car)
         {
-            return this.garageParkingSpace.Remove(_car);
-        }
-
-        public void parkCarInParkingLot(Car _car)
-        {
-            this.parkingLot.Add(_car);
-        }
-        public bool removeCarFromParkingLot(Car _car)
-        {
-            return this.parkingLot.Remove(_car);
+            return this.garageParkingSpace.Remove(_customer_car);
         }
 
-        public Car getNextCarInGarage() 
+        public void parkCarInParkingLot(Customer _customer_car)
+        {
+            this.parkingLot.Add(_customer_car);
+        }
+        public bool removeCarFromParkingLot(Customer _customer_car)
+        {
+            return this.parkingLot.Remove(_customer_car);
+        }
+
+        public Customer getNextCarInGarage() 
         {
             if (this.garageParkingSpace.Count != 0)
             {
@@ -249,9 +250,10 @@ namespace DISS_SEM2.Core
         /// </summary>
         /// <param name="_car"></param>
         /// <returns></returns>
-        public bool getCustomersCarFromParkingLot(Car _car)
+        public bool getCustomersCarFromParkingLot(Customer _customer_car)
         {
-            return this.parkingLot.Remove(_car);
+            return this.parkingLot.Remove(_customer_car);
         }
-    }
+
+            }
 }

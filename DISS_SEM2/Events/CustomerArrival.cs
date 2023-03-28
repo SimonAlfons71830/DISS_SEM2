@@ -1,4 +1,5 @@
 ﻿using DISS_SEM2.Core;
+using DISS_SEM2.Generators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,16 +19,19 @@ namespace DISS_SEM2.Events
         {
 
             var nextArrivalTime = ((STK)core).customerArrivalTimeGenerator.Next() + time;
-            core.AddEvent(new CustomerArrival(core, nextArrivalTime, new Customer(nextArrivalTime, new Car(((STK)core).generateCarType())),null,null));
+            core.AddEvent(new CustomerArrival(core, nextArrivalTime, new Customer(nextArrivalTime, new Car(((STK)core).carTypeGenerator.Next())),null,null));
 
 
             if (((STK)core).getCustomersCountInPaymentLine() == 0 && ((STK)core).getTechniciansCount() != 0)
             {
+                //prebratie auta trva dlhsie a ludia chodia hned, tym padom 3ja dostanu toho isteho technika naraz
+                //rovno ked najdem available tak ho nastavim na obsluhuje ak sa vytvara event 
                 var technic = ((STK)core).getAvailableTechnician();
                 if (technic != null && ((STK)core).getFreeSpacesInGarage() < 5)
                 {
                     //trojuholnikove rozdelenie na prijatie auta a preparkovanie do garaze
                     var takeoverTime = ((STK)core).takeOverTimeGenerator.Next() + time;
+                    technic.obsluhuje = true;
                     var startTakeOver = new StartTakeOver(core, takeoverTime, customer, technic, null);
                     core.AddEvent(startTakeOver);
                 }

@@ -14,7 +14,7 @@ namespace DISS_SEM2.Events
         {
         }
 
-        public void execute()
+        public override void execute()
         {
             technician.obsluhuje = false;
 
@@ -29,7 +29,7 @@ namespace DISS_SEM2.Events
                     {
                         var newCustomer = ((STK)core).getCustomerInLine();
 
-                        var takeoverTime = ((STK)core).takeOverTimeGenerator.Next() + 1;
+                        var takeoverTime = ((STK)core).takeOverTimeGenerator.Next() + time;
                         var startTakeOver = new StartTakeOver(core, takeoverTime, newCustomer, technic, null);
                         core.AddEvent(startTakeOver);
 
@@ -56,13 +56,13 @@ namespace DISS_SEM2.Events
             {
                 //naplanujem prevzatie auta automechanikom (musim zacat od list[0]), 
                 var newAutomechanic = ((STK)core).getAvailableAutomechanic();
-                var nextCar = ((STK)core).getNextCarInGarage();
-                ((STK)core).removeCarFromGarage(nextCar);
+                var nextCustomer_car = ((STK)core).getNextCarInGarage();
+                ((STK)core).removeCarFromGarage(nextCustomer_car);
 
-                if (newAutomechanic != null && nextCar != null)
+                if (newAutomechanic != null && nextCustomer_car!= null)
                 {
-                    newAutomechanic.car = nextCar;
-                    var startInspection = new StartInspection(core, time, customer, null, newAutomechanic);
+                    newAutomechanic.customer_car = nextCustomer_car;
+                    var startInspection = new StartInspection(core, time, nextCustomer_car, null, newAutomechanic);
                     core.AddEvent(startInspection);
                 }
             }

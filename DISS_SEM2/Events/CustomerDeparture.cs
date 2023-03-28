@@ -13,13 +13,11 @@ namespace DISS_SEM2.Events
             base(_core, _time, _customer, _technician, _automechanic)
         {
         }
-        public void execute()
+        public override void execute()
         {
             //vezme si auto spred garaze a odchadza
-            if (((STK)core).getCustomersCarFromParkingLot(customer.getCar()))
-            {
-                //leaving
-            } 
+            ((STK)core).removeCarFromParkingLot(customer);
+            //bye
         }
     }
 }
