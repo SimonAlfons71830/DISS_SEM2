@@ -34,6 +34,7 @@ namespace DISS_SEM2.Events
                 if (newAutomechanic != null && nextCustomer != null)
                 {
                     newAutomechanic.customer_car = nextCustomer;
+                    newAutomechanic.obsluhuje = true;
                     var startInspection = new StartInspection(core, time, nextCustomer , null, newAutomechanic);
                     core.AddEvent(startInspection);
                 }

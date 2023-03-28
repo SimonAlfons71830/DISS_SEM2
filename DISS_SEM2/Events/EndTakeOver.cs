@@ -44,7 +44,7 @@ namespace DISS_SEM2.Events
                 {
                     var paymentCustomer = ((STK)core).getCustomerInPaymentLine();
                     var paymentTime = ((STK)core).paymentTimeGenerator.Next() + time;
-
+                    technic.obsluhuje = true;
                     var payment = new Payment(core,paymentTime,paymentCustomer,technic,null); //nastavit ho ze obsluhuje
                     core.AddEvent(payment);
 
@@ -62,6 +62,7 @@ namespace DISS_SEM2.Events
                 if (newAutomechanic != null && nextCustomer_car!= null)
                 {
                     newAutomechanic.customer_car = nextCustomer_car;
+                    newAutomechanic.obsluhuje = true;
                     var startInspection = new StartInspection(core, time, nextCustomer_car, null, newAutomechanic);
                     core.AddEvent(startInspection);
                 }

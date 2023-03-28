@@ -15,7 +15,7 @@ namespace DISS_SEM2.Events
         }
         public override void execute()
         {
-            automechanic.obsluhuje = true;
+            //automechanic.obsluhuje = true;
 
             double timeOfInspection; ;
             if (automechanic.customer_car.getCar().type == Objects.Cars.CarTypes.Personal)
