@@ -16,6 +16,8 @@ namespace DISS_SEM2.Events
 
         public void execute()
         {
+            technician.obsluhuje = false;
+
             if (((STK)core).getCustomersCountInPaymentLine() == 0)
             {
                 if (((STK)core).getCustomersCountInLine() != 0 &&
@@ -49,9 +51,22 @@ namespace DISS_SEM2.Events
                     ((STK)core).removeCustomerFromPaymentLine(paymentCustomer);
                 }
             }
+
+            if (((STK)core).getCarsCountInGarage() > 0)
+            {
+                //naplanujem prevzatie auta automechanikom (musim zacat od list[0]), 
+                var newAutomechanic = ((STK)core).getAvailableAutomechanic();
+                var nextCar = ((STK)core).getNextCarInGarage();
+                ((STK)core).removeCarFromGarage(nextCar);
+
+                if (newAutomechanic != null && nextCar != null)
+                {
+                    newAutomechanic.car = nextCar;
+                    var startInspection = new StartInspection(core, time, customer, null, newAutomechanic);
+                    core.AddEvent(startInspection);
+                }
+            }
             
-            
-            //naplanujem prevzatie auta automechanikom (musim zacat od list[0]), 
         }
     }
 }

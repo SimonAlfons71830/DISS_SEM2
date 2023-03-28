@@ -20,6 +20,7 @@ namespace DISS_SEM2.Events
             technician.obsluhuje = true;
             technician.car = customer.getCar();
             ((STK)core).parkCarInGarage(technician.car);
+            technician.car = null;
             var endTakeOver = new EndTakeOver(core, time, customer,technician,null);
             endTakeOver.execute();
             //zavolat koniec prijatia(+ technik) - neobslujuje 

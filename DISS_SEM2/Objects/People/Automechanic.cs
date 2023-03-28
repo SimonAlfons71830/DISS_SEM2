@@ -8,8 +8,8 @@ namespace DISS_SEM2
 {
     public class Automechanic
     {
-        private Car car;
-        private bool obsluhuje;
+        public Car car;
+        public bool obsluhuje;
 
         public Automechanic()
         {

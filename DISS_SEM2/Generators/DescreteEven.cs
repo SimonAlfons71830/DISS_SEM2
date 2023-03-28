@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DISS_SEM2.Generators
 {
-    internal class DiscreteEven : Distribution<int>
+    public class DiscreteEven : Distribution<int>
     {
         Random random;
         SeedGenerator seedGenerator;

@@ -29,6 +29,10 @@ namespace DISS_SEM2.Core
         public Exponential customerArrivalTimeGenerator { get; set; }
         public Triangular takeOverTimeGenerator { get; set; }
         public ContinuousEven paymentTimeGenerator { get; set; }
+        public DiscreteEven personalCarInspectionGenerator { get; set; }
+        public EmpiricalDistribution vanCarInspectionGenerator { get; set; }
+        public EmpiricalDistribution cargoCarInspectionGenerator { get; set; }
+
         //boolean obsluhuje
         public bool obsluhuje { get; set; }
 
@@ -65,7 +69,23 @@ namespace DISS_SEM2.Core
             parkingLot = new List<Car>();
 
             paymentTimeGenerator = new ContinuousEven(65, 177, this.seedGenerator); //<65,177)
-
+            personalCarInspectionGenerator = new DiscreteEven(31, 35, this.seedGenerator);
+            (int, int, double)[] vanRanges = {
+            (35,37,0.2),
+            (38,40, 0.35),
+            (41, 47, 0.3),
+            (48, 52, 0.15)
+            };
+            vanCarInspectionGenerator = new EmpiricalDistribution(vanRanges,this.seedGenerator);
+            (int, int, double)[] cargoRanges = {
+            (37,42, 0.05),
+            (43,45, 0.1),
+            (46, 47, 0.15),
+            (48, 51, 0.4),
+            (52,55,0.25),
+            (56,54,0.05)
+            };
+            cargoCarInspectionGenerator = new EmpiricalDistribution(cargoRanges,this.seedGenerator);
         }
 
         public void addCustomerToLine(Customer _customer)
@@ -176,12 +196,27 @@ namespace DISS_SEM2.Core
             }
             return null;
         }
+        public Automechanic getAvailableAutomechanic()
+        {
+            for (int i = 0; i < this.automechanics.Count; i++)
+            {
+                if (!this.automechanics[i].obsluhuje)
+                {
+                    return this.automechanics[i];
+                }
+            }
+            return null;
+        }
 
         public int getFreeSpacesInGarage()
         {
             return this.garageParkingSpace.Count;
         }
 
+        public int getCarsCountInGarage()
+        {
+            return this.garageParkingSpace.Count;
+        }
         public void parkCarInGarage(Car _car)
         {
             this.garageParkingSpace.Add(_car);
@@ -196,6 +231,25 @@ namespace DISS_SEM2.Core
             this.parkingLot.Add(_car);
         }
         public bool removeCarFromParkingLot(Car _car)
+        {
+            return this.parkingLot.Remove(_car);
+        }
+
+        public Car getNextCarInGarage() 
+        {
+            if (this.garageParkingSpace.Count != 0)
+            {
+                var nextCar = this.garageParkingSpace[0];
+                return nextCar;
+            }
+            return null;
+        }
+        /// <summary>
+        /// removes specified car from parking lot in front of dielna
+        /// </summary>
+        /// <param name="_car"></param>
+        /// <returns></returns>
+        public bool getCustomersCarFromParkingLot(Car _car)
         {
             return this.parkingLot.Remove(_car);
         }
