@@ -19,6 +19,8 @@ namespace DISS_SEM2.Events
             automechanic.obsluhuje = false;
             //preparkuje auto na parking lot
             ((STK)core).parkCarInParkingLot(automechanic.customer_car);
+            //zakaznik prejde do payment line
+            ((STK)core).addCustomerToPaymentLine(automechanic.customer_car);// same as customer
             automechanic.customer_car = null;
 
             //skontroluje rad v dielni ak je tam nieco naplanuje novu inspection
@@ -40,8 +42,7 @@ namespace DISS_SEM2.Events
                 }
             }
 
-            //zakaznik prejde do payment line
-            ((STK)core).addCustomerToPaymentLine(automechanic.customer_car);// same as customer
+            
 
         }
     }

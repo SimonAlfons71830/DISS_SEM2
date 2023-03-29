@@ -17,8 +17,17 @@ namespace DISS_SEM2.Events
         public override void execute()
         {
             //technician.obsluhuje = true;
-            var payingCustomer = ((STK)core).getCustomerInPaymentLine(); //uz je osetrene ci tam niekto je
-            ((STK)core).removeCustomerFromPaymentLine(payingCustomer);
+            if (((STK)core).getCustomersCountInPaymentLine() >0)
+            {
+                var payingCustomer = ((STK)core).getCustomerInPaymentLine(); //uz je osetrene ci tam niekto je
+                ((STK)core).removeCustomerFromPaymentLine(payingCustomer);
+            }
+            else
+            {
+                //ide priamo z end takeover ESTE OSETRIT!!!
+            }
+            
+            
             //zaplatil naplanuje event odchod
             technician.obsluhuje = false;
 

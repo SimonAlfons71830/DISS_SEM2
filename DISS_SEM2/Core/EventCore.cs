@@ -12,7 +12,6 @@ namespace DISS_SEM2.Core
     public class EventCore : MonteCarlo
     {
         //casova os 
-        
         public SimplePriorityQueue<Event, double> timeline;
         //aktualny cas simulacie
         public double currentTime;
@@ -21,8 +20,9 @@ namespace DISS_SEM2.Core
         {
             this.timeline = new SimplePriorityQueue<Event, double>();
             this.currentTime = 0;
+            
             this.AddEvent(new CustomerArrival(this, 0, new Customer(0, new Car(((STK)this).carTypeGenerator.Next())), null,null));
-
+            this.AddEvent(new SystemEvent(this, 0, null, null, null));
         }
         public override void AfterReplication()
         {
@@ -31,7 +31,7 @@ namespace DISS_SEM2.Core
 
         public override void Replication()
         {
-            this.Simulate(28800);
+            this.Simulate(28800-1);
             //8 hodin
         }
 
@@ -44,15 +44,19 @@ namespace DISS_SEM2.Core
                 _event = this.timeline.Dequeue();
                 //aktualny cas sa nastavi na cas eventu
                 this.currentTime = _event.time; //getter
+                ((STK)this).Notify();
                 //osetrenie casu -> uz sa dalsi event nevykona
                 if (this.currentTime > maxTime) { break; }
                 _event.execute();
             }
+
         }
 
         public void AddEvent(Event _event)
         {
             this.timeline.Enqueue(_event, _event.time);
         }
+
+        
     }
 }

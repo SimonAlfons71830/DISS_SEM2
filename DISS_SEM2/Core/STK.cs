@@ -1,23 +1,30 @@
 ﻿using DISS_SEM2.Generators;
 using DISS_SEM2.Objects.Cars;
+using Priority_Queue;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DISS_SEM2.Core
 {
     public class STK : EventCore
     {
+        List<ISTKObserver<STK>> _observers = new List<ISTKObserver<STK>>();
+        private int speed;
+        private double frequency;
         //objectList - cakajuci zakaznici
+        //should be queue
+        private SimplePriorityQueue<Customer,double> customersLineQ;
+        private SimplePriorityQueue<Customer, double> paymentLineQ;
 
-        private List<Customer> customersLine{ get; set; }
-        private List<Customer> paymentLine { get; set; }
         private List<Technician> technicians;
         private List<Automechanic> automechanics;
         //parkovacie miesta v dielni, ako list sa lepsie pristupuje k ukladaniu objektu na prve volne miesto
         private List<Customer> garageParkingSpace;
+        private SimplePriorityQueue<Customer, double> garageParkingSpaceQ;
         //parkovacie miesta pred dielnou
         private List<Customer> parkingLot;
 
@@ -42,9 +49,12 @@ namespace DISS_SEM2.Core
 
         public STK()
         {
+            this.customersLineQ = new SimplePriorityQueue<Customer, double>();
+            this.paymentLineQ = new SimplePriorityQueue<Customer, double>();
+            this.garageParkingSpaceQ = new SimplePriorityQueue<Customer, double>();
+
+
             this.obsluhuje = false;
-            this.customersLine = new List<Customer>();
-            this.paymentLine = new List<Customer>();
             this.seedGenerator = new SeedGenerator();
             double _mi = 3600.0 / 23.0;
             this.customerArrivalTimeGenerator = new Exponential(this.seedGenerator, _mi);
@@ -69,51 +79,54 @@ namespace DISS_SEM2.Core
             parkingLot = new List<Customer>();
 
             paymentTimeGenerator = new ContinuousEven(65, 177, this.seedGenerator); //<65,177)
-            personalCarInspectionGenerator = new DiscreteEven(31, 35, this.seedGenerator);
+            personalCarInspectionGenerator = new DiscreteEven(31 * 60, 45 * 60, this.seedGenerator);
             (int, int, double)[] vanRanges = {
-            (35,37,0.2),
-            (38,40, 0.35),
-            (41, 47, 0.3),
-            (48, 52, 0.15)
+            (35*60, 37*60, 0.2),
+            (38 * 60, 40 * 60, 0.35),
+            (41*60, 47*60, 0.3),
+            (48*60, 52*60, 0.15)
             };
-            vanCarInspectionGenerator = new EmpiricalDistribution(vanRanges,this.seedGenerator);
+            vanCarInspectionGenerator = new EmpiricalDistribution(vanRanges, this.seedGenerator);
             (int, int, double)[] cargoRanges = {
-            (37,42, 0.05),
-            (43,45, 0.1),
-            (46, 47, 0.15),
-            (48, 51, 0.4),
-            (52,55,0.25),
-            (56,54,0.05)
+            (37*60, 42*60, 0.05),
+            (43*60, 45*60, 0.1),
+            (46*60, 47*60, 0.15),
+            (48*60, 51*60, 0.4),
+            (52*60, 55*60, 0.25),
+            (56*60, 65, 0.05)
             };
-            cargoCarInspectionGenerator = new EmpiricalDistribution(cargoRanges,this.seedGenerator);
+            cargoCarInspectionGenerator = new EmpiricalDistribution(cargoRanges, this.seedGenerator);
             this.carTypeGenerator = new CarGenerator(this.seedGenerator);
+            this.speed = 1;
+
+
+            this.frequency = 1; //kazda sekunda 
         }
 
         public void addCustomerToLine(Customer _customer)
         {
-            this.customersLine.Add(_customer);
+            //this.customersLine.Add(_customer);
+            this.customersLineQ.Enqueue(_customer, _customer.arrivalTime);
         }
 
-        public bool removeCustomerFromLine(Customer _customer)
+        public void removeCustomerFromLine(Customer _customer)
         {
-            return this.customersLine.Remove(_customer);
+            this.customersLineQ.Dequeue(); //removes customer with min priority
+
+            //return this.customersLine.Remove(_customer);
         }
 
         //vymaze zakaznika z cakacieho radu a prida ho do radu na platenie
-        public bool addCustomerToPaymentLine(Customer _customer)
+        public void addCustomerToPaymentLine(Customer _customer)
         {
-            if (this.removeCustomerFromLine(_customer))
-            {
-                this.paymentLine.Add(_customer);
-                return true;
-            }
-            //nepodarilo sa vymazat zakaznika z predchadzajuceho radu
-            return false;
+            //this.paymentLine.Add(_customer);
+            this.paymentLineQ.Enqueue(_customer, _customer.arrivalTime);
         }
 
-        public bool removeCustomerFromPaymentLine(Customer _customer)
-        { 
-            return this.paymentLine.Remove(_customer);
+        public void removeCustomerFromPaymentLine(Customer _customer)
+        {
+            this.paymentLineQ.Dequeue();
+            //return this.paymentLine.Remove(_customer);
         }
 
         /// <summary>
@@ -122,12 +135,15 @@ namespace DISS_SEM2.Core
         /// <returns></returns>
         public Customer getCustomerInLine()
         {
-            if (this.customersLine.Count != 0)
+            return this.customersLineQ.First();
+
+            /*if (this.customersLine.Count != 0)
             {
                 var customer = this.customersLine[0];
                 return customer;
             }
-            return null;
+            return null;*/
+
         }
         /// <summary>
         /// returns customer from first place in payment line
@@ -135,43 +151,31 @@ namespace DISS_SEM2.Core
         /// <returns></returns>
         public Customer getCustomerInPaymentLine()
         {
-            if (this.paymentLine.Count != 0)
+            return paymentLineQ.First();
+
+            /*if (this.paymentLine.Count != 0)
             {
                 var customer = this.paymentLine[0];
                 return customer;
             }
-            return null;
+            return null;*/
         }
 
         public int getCustomersCountInLine()
-        { 
-            return this.customersLine.Count;
+        {
+            
+            return this.customersLineQ.Count();
+            
+            //return this.customersLine.Count;
         }
 
         public int getCustomersCountInPaymentLine()
-        { 
-            return this.paymentLine.Count;
+        {
+            return this.paymentLineQ.Count;
+            //return this.paymentLine.Count;
         }
 
-        /*public CarTypes generateCarType() 
-        {
-            var genNumber = carGenerator.Next();
-
-            if ( genNumber < 0.65)
-            {
-                return CarTypes.Personal;
-            }
-            else if (genNumber < 86)
-            {
-                return CarTypes.Van;
-            }
-            else
-            {
-                return CarTypes.Cargo;
-            }
-        }*/
-
-        public void addTechnician() 
+        public void addTechnician()
         {
             this.technicians.Add(new Technician());
         }
@@ -182,11 +186,11 @@ namespace DISS_SEM2.Core
         }
 
         public int getTechniciansCount()
-        { return this.technicians.Count;}
+        { return this.technicians.Count; }
         public int getAutomechanicsCount()
-        { return this.automechanics.Count;}
+        { return this.automechanics.Count; }
 
-        public Technician getAvailableTechnician() 
+        public Technician getAvailableTechnician()
         {
             for (int i = 0; i < this.technicians.Count; i++)
             {
@@ -197,6 +201,7 @@ namespace DISS_SEM2.Core
             }
             return null;
         }
+
         public Automechanic getAvailableAutomechanic()
         {
             for (int i = 0; i < this.automechanics.Count; i++)
@@ -211,20 +216,28 @@ namespace DISS_SEM2.Core
 
         public int getFreeSpacesInGarage()
         {
-            return this.garageParkingSpace.Count;
+            return 5 - this.garageParkingSpaceQ.Count;
+            //return this.garageParkingSpace.Count;
         }
 
         public int getCarsCountInGarage()
         {
-            return this.garageParkingSpace.Count;
+            return this.garageParkingSpaceQ.Count;
+            //return this.garageParkingSpace.Count;
         }
         public void parkCarInGarage(Customer _customer_car)
         {
-            this.garageParkingSpace.Add(_customer_car);
+            this.garageParkingSpaceQ.Enqueue(_customer_car, _customer_car.arrivalTime);
+            //this.garageParkingSpace.Add(_customer_car);
         }
-        public bool removeCarFromGarage(Customer _customer_car)
+        /// <summary>
+        /// removes car what came first 
+        /// </summary>
+        /// <param name="_customer_car"></param>
+        public void removeCarFromGarage(Customer _customer_car)
         {
-            return this.garageParkingSpace.Remove(_customer_car);
+            this.garageParkingSpaceQ.Dequeue();
+            //return this.garageParkingSpace.Remove(_customer_car);
         }
 
         public void parkCarInParkingLot(Customer _customer_car)
@@ -236,14 +249,15 @@ namespace DISS_SEM2.Core
             return this.parkingLot.Remove(_customer_car);
         }
 
-        public Customer getNextCarInGarage() 
+        public Customer getNextCarInGarage()
         {
-            if (this.garageParkingSpace.Count != 0)
+            return this.garageParkingSpaceQ.First();
+            /*if (this.garageParkingSpace.Count != 0)
             {
                 var nextCar = this.garageParkingSpace[0];
                 return nextCar;
             }
-            return null;
+            return null;*/
         }
         /// <summary>
         /// removes specified car from parking lot in front of dielna
@@ -255,5 +269,75 @@ namespace DISS_SEM2.Core
             return this.parkingLot.Remove(_customer_car);
         }
 
+        public void addObserver(ISTKObserver<STK> _stkObserver) 
+        {
+            _observers.Add(_stkObserver);
+        }
+
+        public void Notify()
+        { 
+            foreach(var _observer in _observers)
+            {
+                _observer.refresh(this);
             }
+        }
+
+        public void sleepSim()
+        {
+            Thread.Sleep(this.speed);
+        }
+
+        public int ReturnSpeed()
+        {
+            return this.speed;
+        }
+
+        public void SetSpeed(int _speed)
+        {
+            this.speed = _speed;
+        }
+
+        public int getFreeTechnicianCount()
+        {
+            var count = 0;
+            foreach (var technic in this.technicians)
+            {
+                if (!technic.obsluhuje)
+                {
+                    count++;
+                }
+            }
+            return count;
+        }
+        public int getAllTechniciansCount()
+        { 
+            return this.technicians.Count;
+        }
+
+        public int getFreeAutomechanicCount()
+        {
+            var count = 0;
+            foreach (var mechanic in this.automechanics)
+            {
+                if (!mechanic.obsluhuje)
+                {
+                    count++;
+                }
+            }
+            return count;
+        }
+        public int getAllAutomechanicCount()
+        {
+            return this.automechanics.Count;
+        }
+
+        public void setFrequency(int _frequency)
+        { 
+            this.frequency = _frequency;
+        }
+        internal double getFrequency()
+        {
+            return this.frequency;
+        }
+    }
 }

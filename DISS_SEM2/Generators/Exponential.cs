@@ -11,7 +11,6 @@ namespace DISS_SEM2.Generators
         private SeedGenerator seedGenerator;
         Random random;
         private double lambda;
-        private double mi;
 
         public Exponential(SeedGenerator _seedGenerator, double mi)
         {

@@ -17,6 +17,7 @@ namespace DISS_SEM2.Events
 
         public override void execute()
         {
+            //ak je 15:45 uz sa neplanuje prichod dalsieho zakaznika !!!!
 
             var nextArrivalTime = ((STK)core).customerArrivalTimeGenerator.Next() + time;
             core.AddEvent(new CustomerArrival(core, nextArrivalTime, new Customer(nextArrivalTime, new Car(((STK)core).carTypeGenerator.Next())),null,null));
@@ -27,7 +28,7 @@ namespace DISS_SEM2.Events
                 //prebratie auta trva dlhsie a ludia chodia hned, tym padom 3ja dostanu toho isteho technika naraz
                 //rovno ked najdem available tak ho nastavim na obsluhuje ak sa vytvara event 
                 var technic = ((STK)core).getAvailableTechnician();
-                if (technic != null && ((STK)core).getFreeSpacesInGarage() < 5)
+                if (technic != null && ((STK)core).getFreeSpacesInGarage() <= 5)
                 {
                     //trojuholnikove rozdelenie na prijatie auta a preparkovanie do garaze
                     var takeoverTime = ((STK)core).takeOverTimeGenerator.Next() + time;
