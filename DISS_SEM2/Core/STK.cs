@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace DISS_SEM2.Core
 {
@@ -42,7 +43,8 @@ namespace DISS_SEM2.Core
         public CarGenerator carTypeGenerator { get; set; }
         //boolean obsluhuje
         public bool obsluhuje { get; set; }
-
+        private int CarsCountGarage { get; set; }
+        private int _ids;
         Random carGenerator;
         //cas zmeny
         public double timeOfLastChange;
@@ -52,7 +54,7 @@ namespace DISS_SEM2.Core
             this.customersLineQ = new SimplePriorityQueue<Customer, double>();
             this.paymentLineQ = new SimplePriorityQueue<Customer, double>();
             this.garageParkingSpaceQ = new SimplePriorityQueue<Customer, double>();
-
+            CarsCountGarage = 0;
 
             this.obsluhuje = false;
             this.seedGenerator = new SeedGenerator();
@@ -62,17 +64,23 @@ namespace DISS_SEM2.Core
             //??
             this.carGenerator = new Random(this.seedGenerator.generate_seed());
             this.technicians = new List<Technician>();
+            this._ids = 0;
 
             for (int i = 0; i < 5; i++)
             {
-                this.technicians.Add(new Technician());
+                var technic = new Technician();
+                technic._id = i;
+                this.technicians.Add(technic);
+
             }
 
             this.automechanics = new List<Automechanic>();
 
             for (int i = 0; i < 5; i++)
             {
-                this.automechanics.Add(new Automechanic());
+                var automechanic = new Automechanic();
+                automechanic._id = i;
+                this.automechanics.Add(automechanic);
             }
 
             garageParkingSpace = new List<Customer>();
@@ -109,7 +117,7 @@ namespace DISS_SEM2.Core
             this.customersLineQ.Enqueue(_customer, _customer.arrivalTime);
         }
 
-        public void removeCustomerFromLine(Customer _customer)
+        public void removeCustomerFromLine()
         {
             this.customersLineQ.Dequeue(); //removes customer with min priority
 
@@ -123,7 +131,7 @@ namespace DISS_SEM2.Core
             this.paymentLineQ.Enqueue(_customer, _customer.arrivalTime);
         }
 
-        public void removeCustomerFromPaymentLine(Customer _customer)
+        public void removeCustomerFromPaymentLine()
         {
             this.paymentLineQ.Dequeue();
             //return this.paymentLine.Remove(_customer);
@@ -163,7 +171,6 @@ namespace DISS_SEM2.Core
 
         public int getCustomersCountInLine()
         {
-            
             return this.customersLineQ.Count();
             
             //return this.customersLine.Count;
@@ -214,12 +221,6 @@ namespace DISS_SEM2.Core
             return null;
         }
 
-        public int getFreeSpacesInGarage()
-        {
-            return 5 - this.garageParkingSpaceQ.Count;
-            //return this.garageParkingSpace.Count;
-        }
-
         public int getCarsCountInGarage()
         {
             return this.garageParkingSpaceQ.Count;
@@ -234,7 +235,7 @@ namespace DISS_SEM2.Core
         /// removes car what came first 
         /// </summary>
         /// <param name="_customer_car"></param>
-        public void removeCarFromGarage(Customer _customer_car)
+        public void removeCarFromGarage()
         {
             this.garageParkingSpaceQ.Dequeue();
             //return this.garageParkingSpace.Remove(_customer_car);
@@ -339,5 +340,36 @@ namespace DISS_SEM2.Core
         {
             return this.frequency;
         }
+        public void pomCarsCountPlus() 
+        {
+            this.CarsCountGarage++;
+        }
+        public int returnPomCarsCount()
+        {
+            return this.CarsCountGarage;
+        }
+        public void pomCarsCountMinus()
+        {
+            this.CarsCountGarage--;
+        }
+
+        public List<Technician> getTechnicianList()
+        {
+            return this.technicians;
+        }
+        public List<Automechanic> getAutomechanicsList()
+        {
+            return this.automechanics;
+        }
+        public void setId(Customer _customer)
+        {
+            _ids++;
+            _customer._id = _ids;
+        }
+        public List<Customer> getCustomersInLine()
+        {
+            return this.customersLineQ.ToList();
+        }
     }
+
 }

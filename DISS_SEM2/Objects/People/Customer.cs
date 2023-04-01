@@ -10,6 +10,7 @@ namespace DISS_SEM2
     {
         private Car car;
         public double arrivalTime { get; set; }
+        public int _id;
 
         public Customer(double _arrivalTime, Car _car)
         {
@@ -26,5 +27,7 @@ namespace DISS_SEM2
         { 
             return this.arrivalTime;
         }
+        public void setId(int id)
+        { this._id = id; }
     }
 }

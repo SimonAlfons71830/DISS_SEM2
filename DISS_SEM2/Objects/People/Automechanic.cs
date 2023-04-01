@@ -10,14 +10,17 @@ namespace DISS_SEM2
     {
         public Customer customer_car;
         public bool obsluhuje;
+        public int _id;
 
         public Automechanic()
         {
             this.obsluhuje = false;
+            
         }
 
         public bool Obsluhuje()
         { return this.obsluhuje; }
+
 
     }
 }

@@ -19,6 +19,9 @@ namespace DISS_SEM2
         private Thread thread1;
         private double oldtime;
         private bool paused;
+        DataTable dataTechnicians = new DataTable();
+        DataTable dataAutomechanics = new DataTable();
+        DataTable customersInWaitingline= new DataTable();
         public Form1(STK _simulationCore)
         {
             this._simCore = _simulationCore;
@@ -55,8 +58,113 @@ namespace DISS_SEM2
                 label7.Text = customerspaymantline;
                 label9.Text = _simulationCore.getFreeTechnicianCount().ToString() + "/" + _simulationCore.getAllTechniciansCount().ToString();
                 label11.Text = _simulationCore.getFreeAutomechanicCount().ToString() + "/" + _simulationCore.getAllAutomechanicCount().ToString();
+                label13.Text = _simulationCore.getCarsCountInGarage().ToString() + "/" + "5";
 
-                label13.Text = _simulationCore.getFreeSpacesInGarage().ToString() + "/" + "5";
+                customersInWaitingline.Clear();
+                foreach ( Customer customerWaiting in _simulationCore.getCustomersInLine())
+                {
+                    DataRow row = customersInWaitingline.NewRow();
+                    row["Customer ID"] = customerWaiting._id;
+                }
+                dataGridView3.DataSource= customersInWaitingline;
+
+
+                //datagrid technicians
+                dataTechnicians.Clear();
+                foreach (Technician technician in _simulationCore.getTechnicianList())
+                {
+                    DataRow row = dataTechnicians.NewRow();
+                    row["Technician ID"] = technician._id;
+                    
+
+                    Customer customer = technician.customer_car; // assuming this method returns the customer the technician is working on
+                    if (customer != null)
+                    {
+                        row["Customer ID"] = customer._id;
+                        row["Status"] = "Busy";
+                    }
+                    else
+                    {
+                        row["Status"] = "Free";
+                    }
+
+                    dataTechnicians.Rows.Add(row);
+                }
+
+
+                // Bind the DataTable to the DataGridView
+                dataGridView1.DataSource = dataTechnicians;
+
+                // Format the DataGridView
+                dataGridView1.RowHeadersVisible = true;
+                dataGridView1.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
+
+                // Format the "Status" column
+                DataGridViewCellStyle busyStyle = new DataGridViewCellStyle();
+                busyStyle.BackColor = Color.Red;
+                busyStyle.ForeColor = Color.White;
+
+                DataGridViewCellStyle freeStyle = new DataGridViewCellStyle();
+                freeStyle.BackColor = Color.Green;
+                freeStyle.ForeColor = Color.White;
+
+                foreach (DataGridViewRow row in dataGridView1.Rows)
+                {
+                    if (row.Cells["Status"].Value != null && row.Cells["Status"].Value.ToString() == "Busy")
+                    {
+                        row.Cells["Status"].Style = busyStyle;
+                    }
+                    else
+                    {
+                        row.Cells["Status"].Style = freeStyle;
+                    }
+                }
+
+
+                //datagrid automechanics
+                dataAutomechanics.Clear();
+                foreach (Automechanic automechanic in _simulationCore.getAutomechanicsList())
+                {
+                    DataRow row = dataAutomechanics.NewRow();
+                    row["Automechanic ID"] = automechanic._id;
+
+
+                    Customer customer = automechanic.customer_car; // assuming this method returns the customer the technician is working on
+                    if (customer != null)
+                    {
+                        row["Customer ID"] = customer._id;
+                        row["Status"] = "Busy";
+                    }
+                    else
+                    {
+                        row["Status"] = "Free";
+                    }
+
+                    dataAutomechanics.Rows.Add(row);
+                }
+
+
+                // Bind the DataTable to the DataGridView
+                dataGridView2.DataSource = dataAutomechanics;
+
+                // Format the DataGridView
+                dataGridView2.RowHeadersVisible = true;
+                dataGridView2.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
+
+                // Format the "Status" column
+                
+                foreach (DataGridViewRow row in dataGridView2.Rows)
+                {
+                    if (row.Cells["Status"].Value != null && row.Cells["Status"].Value.ToString() == "Busy")
+                    {
+                        row.Cells["Status"].Style = busyStyle;
+                    }
+                    else
+                    {
+                        row.Cells["Status"].Style = freeStyle;
+                    }
+                }
+
             });
         }
 
@@ -67,6 +175,21 @@ namespace DISS_SEM2
             paused = true;
             _simTime = DateTime.Parse("2/16/2008 09:00:00 AM");
             oldtime = 0;
+
+            DoubleBuffered = true;
+
+
+
+            dataTechnicians.Columns.Add("Technician ID", typeof(int));
+            dataTechnicians.Columns.Add("Customer ID", typeof(int));
+            dataTechnicians.Columns.Add("Status", typeof(string));
+
+            dataAutomechanics.Columns.Add("Automechanic ID", typeof(int));
+            dataAutomechanics.Columns.Add("Customer ID", typeof(int));
+            dataAutomechanics.Columns.Add("Status", typeof(string));
+
+            customersInWaitingline.Columns.Add("Customer ID", typeof(int));
+
         }
 
 
@@ -111,6 +234,9 @@ namespace DISS_SEM2
             Application.Exit();
         }
 
-        
+        private void listView1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

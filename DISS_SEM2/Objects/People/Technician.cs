@@ -10,6 +10,7 @@ namespace DISS_SEM2
     {
         public Customer customer_car;
         public bool obsluhuje;
+        public int _id;
 
         public Technician() 
         {

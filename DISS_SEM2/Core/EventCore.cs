@@ -20,8 +20,10 @@ namespace DISS_SEM2.Core
         {
             this.timeline = new SimplePriorityQueue<Event, double>();
             this.currentTime = 0;
-            
-            this.AddEvent(new CustomerArrival(this, 0, new Customer(0, new Car(((STK)this).carTypeGenerator.Next())), null,null));
+
+            var newCustomer = new Customer(0, new Car(((STK)this).carTypeGenerator.Next()));
+            ((STK)this).setId(newCustomer);
+            this.AddEvent(new CustomerArrival(this, 0, newCustomer, null, null));
             this.AddEvent(new SystemEvent(this, 0, null, null, null));
         }
         public override void AfterReplication()
@@ -31,6 +33,7 @@ namespace DISS_SEM2.Core
 
         public override void Replication()
         {
+            //dat rovno ako parameter replication poslem do konstruktora
             this.Simulate(28800-1);
             //8 hodin
         }

@@ -15,9 +15,50 @@ namespace DISS_SEM2.Events
         }
         public override void execute()
         {
-            //vezme si auto spred garaze a odchadza
-            ((STK)core).removeCarFromParkingLot(customer);
-            //bye
+
+            //uvolni technika
+            //naplanuje novu platbu
+            //ak nikto nieje v rade tak naplanuje start takeovber
+
+            technician.obsluhuje = false;
+            technician.customer_car = null;
+
+            var technic = ((STK)core).getAvailableTechnician();
+
+            if (technic != null) 
+            {
+                if (((STK)core).getCustomersCountInPaymentLine() > 0) 
+                {
+                    //platba
+                    var paymentTime = ((STK)core).paymentTimeGenerator.Next() + time;
+                    var paymentCustomer = ((STK)core).getCustomerInPaymentLine();
+                    technic.obsluhuje = true;
+                    var newPayment = new Payment(core, paymentTime, paymentCustomer, technic, null);
+                    core.AddEvent(newPayment);
+                    ((STK)core).removeCustomerFromPaymentLine();
+                }
+                else
+                {
+                    if (((STK)core).getCarsCountInGarage() < 5)
+                    {
+                        if (((STK)core).getCustomersCountInLine() > 0)
+                        {
+                            //takeover
+                            var takeoverTime = ((STK)core).takeOverTimeGenerator.Next() + time;
+                            var takeoverCustomer = ((STK)core).getCustomerInLine();
+
+                            technic.obsluhuje = true;
+                            technic.customer_car = takeoverCustomer;
+                            var newTakeover = new StartTakeOver(core, takeoverTime, takeoverCustomer, technic, null);
+                            core.AddEvent(newTakeover);
+                            ((STK)core).removeCustomerFromLine();
+                        }
+                    }
+                }
+            }
+
+
+
         }
     }
 }
