@@ -23,6 +23,23 @@ namespace DISS_SEM2.Events
             ((STK)core).parkCarInParkingLot(automechanic.customer_car);
             ((STK)core).addCustomerToPaymentLine(automechanic.customer_car);
             
+            //viem ze sa niekto zaradil do radu na platenie, mozem dat robotu technikovi
+
+            var technic = ((STK)core).getAvailableTechnician();
+            if (technic != null) 
+            {
+                //payment
+                var paymentTime = ((STK)core).paymentTimeGenerator.Next() + time;
+                var payingCustomer = ((STK)core).getCustomerInPaymentLine();
+                var newPayment = new Payment(core, paymentTime, payingCustomer, technic,null);
+                core.AddEvent(newPayment);
+                ((STK)core).removeCustomerFromPaymentLine();
+            }
+
+            
+
+
+
             automechanic.obsluhuje = false;
             automechanic.customer_car = null;
 

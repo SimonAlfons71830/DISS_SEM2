@@ -57,6 +57,7 @@
     <Compile Include="Generators\CarGenerator.cs" />
     <Compile Include="ISTKObserver.cs" />
     <Compile Include="Objects\Cars\CarTypes.cs" />
+    <Compile Include="Objects\ParkingSpace.cs" />
     <Compile Include="Objects\People\Automechanic.cs" />
     <Compile Include="Objects\Cars\Car.cs" />
     <Compile Include="Core\EventCore.cs" />

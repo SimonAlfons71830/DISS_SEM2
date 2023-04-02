@@ -39,11 +39,10 @@ namespace DISS_SEM2.Events
                 }
                 else
                 {
-                    if (((STK)core).getCarsCountInGarage() < 5)
+                    if (((STK)core).getCustomersCountInLine() > 0)
                     {
-                        if (((STK)core).getCustomersCountInLine() > 0)
+                        if (((STK)core).reserveParking())
                         {
-                            //takeover
                             var takeoverTime = ((STK)core).takeOverTimeGenerator.Next() + time;
                             var takeoverCustomer = ((STK)core).getCustomerInLine();
 
@@ -53,6 +52,23 @@ namespace DISS_SEM2.Events
                             core.AddEvent(newTakeover);
                             ((STK)core).removeCustomerFromLine();
                         }
+
+
+                        /*var parkingPlace = ((STK)core).getAvailableParkingSpace();
+                        if (parkingPlace != null)
+                        {
+                            if (((STK)core).reserveParkingSpace(customer)) //reservuje miesto
+                            {
+                                var takeoverTime = ((STK)core).takeOverTimeGenerator.Next() + time;
+                                var takeoverCustomer = ((STK)core).getCustomerInLine();
+
+                                technic.obsluhuje = true;
+                                technic.customer_car = takeoverCustomer;
+                                var newTakeover = new StartTakeOver(core, takeoverTime, takeoverCustomer, technic, null);
+                                core.AddEvent(newTakeover);
+                                ((STK)core).removeCustomerFromLine();
+                            }
+                        }*/
                     }
                 }
             }

@@ -21,7 +21,6 @@ namespace DISS_SEM2
         private bool paused;
         DataTable dataTechnicians = new DataTable();
         DataTable dataAutomechanics = new DataTable();
-        DataTable customersInWaitingline= new DataTable();
         public Form1(STK _simulationCore)
         {
             this._simCore = _simulationCore;
@@ -58,24 +57,16 @@ namespace DISS_SEM2
                 label7.Text = customerspaymantline;
                 label9.Text = _simulationCore.getFreeTechnicianCount().ToString() + "/" + _simulationCore.getAllTechniciansCount().ToString();
                 label11.Text = _simulationCore.getFreeAutomechanicCount().ToString() + "/" + _simulationCore.getAllAutomechanicCount().ToString();
-                label13.Text = _simulationCore.getCarsCountInGarage().ToString() + "/" + "5";
+                label13.Text = _simulationCore.getReserverParkingPlaces().ToString() + "/" + "5";
+                label16.Text = _simulationCore.getCarsCountInGarage().ToString() + "/" + "5";
 
-                customersInWaitingline.Clear();
-                foreach ( Customer customerWaiting in _simulationCore.getCustomersInLine())
-                {
-                    DataRow row = customersInWaitingline.NewRow();
-                    row["Customer ID"] = customerWaiting._id;
-                }
-                dataGridView3.DataSource= customersInWaitingline;
-
-
-                //datagrid technicians
+                /*//datagrid technicians
                 dataTechnicians.Clear();
                 foreach (Technician technician in _simulationCore.getTechnicianList())
                 {
                     DataRow row = dataTechnicians.NewRow();
                     row["Technician ID"] = technician._id;
-                    
+
 
                     Customer customer = technician.customer_car; // assuming this method returns the customer the technician is working on
                     if (customer != null)
@@ -152,7 +143,7 @@ namespace DISS_SEM2
                 dataGridView2.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
 
                 // Format the "Status" column
-                
+
                 foreach (DataGridViewRow row in dataGridView2.Rows)
                 {
                     if (row.Cells["Status"].Value != null && row.Cells["Status"].Value.ToString() == "Busy")
@@ -163,7 +154,7 @@ namespace DISS_SEM2
                     {
                         row.Cells["Status"].Style = freeStyle;
                     }
-                }
+                }*/
 
             });
         }
@@ -188,7 +179,6 @@ namespace DISS_SEM2
             dataAutomechanics.Columns.Add("Customer ID", typeof(int));
             dataAutomechanics.Columns.Add("Status", typeof(string));
 
-            customersInWaitingline.Columns.Add("Customer ID", typeof(int));
 
         }
 
@@ -197,10 +187,17 @@ namespace DISS_SEM2
         {
             _simCore.SetSpeed((int)numericUpDown1.Value);
 
+            _simCore.createAutomechanics((int)numericUpDown3.Value);
+            _simCore.createTechnicians((int)numericUpDown2.Value);
+
+            var time = (int)numericUpDown4.Value * 3600 - 1;
+            _simCore.setSimulationTime(time);
+
             paused = false;
-            if (!radioButton1.Checked && !radioButton2.Checked)
+            if (!radioButton1.Checked && !radioButton2.Checked || 
+                numericUpDown2.Value == 0 || numericUpDown3.Value == 0 || numericUpDown4.Value == 0) 
             {
-                MessageBox.Show("Before start choose a way of showing simulation and speed.");
+                MessageBox.Show("SET REQUIRED PARAMETERS.");
             }
             else if (radioButton1.Checked)
             {
@@ -235,6 +232,11 @@ namespace DISS_SEM2
         }
 
         private void listView1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label12_Click(object sender, EventArgs e)
         {
 
         }

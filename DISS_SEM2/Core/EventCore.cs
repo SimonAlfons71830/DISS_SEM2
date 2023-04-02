@@ -34,8 +34,7 @@ namespace DISS_SEM2.Core
         public override void Replication()
         {
             //dat rovno ako parameter replication poslem do konstruktora
-            this.Simulate(28800-1);
-            //8 hodin
+            this.Simulate(((STK)this).getSimulationTime());
         }
 
         public void Simulate(double maxTime)

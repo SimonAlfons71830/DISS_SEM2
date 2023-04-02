@@ -1,9 +1,12 @@
 ﻿using DISS_SEM2.Generators;
+using DISS_SEM2.Objects;
 using DISS_SEM2.Objects.Cars;
 using Priority_Queue;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Text;
 using System.Linq;
+using System.Runtime.Serialization.Formatters;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -28,6 +31,7 @@ namespace DISS_SEM2.Core
         private SimplePriorityQueue<Customer, double> garageParkingSpaceQ;
         //parkovacie miesta pred dielnou
         private List<Customer> parkingLot;
+        private List<ParkingSpace> garage;
 
         //generator nasad
         private SeedGenerator seedGenerator;
@@ -45,6 +49,7 @@ namespace DISS_SEM2.Core
         public bool obsluhuje { get; set; }
         private int CarsCountGarage { get; set; }
         private int _ids;
+        private int _simulationTime;
         Random carGenerator;
         //cas zmeny
         public double timeOfLastChange;
@@ -61,27 +66,11 @@ namespace DISS_SEM2.Core
             double _mi = 3600.0 / 23.0;
             this.customerArrivalTimeGenerator = new Exponential(this.seedGenerator, _mi);
             this.takeOverTimeGenerator = new Triangular(this.seedGenerator, 180, 695, 431);
-            //??
             this.carGenerator = new Random(this.seedGenerator.generate_seed());
             this.technicians = new List<Technician>();
             this._ids = 0;
 
-            for (int i = 0; i < 5; i++)
-            {
-                var technic = new Technician();
-                technic._id = i;
-                this.technicians.Add(technic);
-
-            }
-
-            this.automechanics = new List<Automechanic>();
-
-            for (int i = 0; i < 5; i++)
-            {
-                var automechanic = new Automechanic();
-                automechanic._id = i;
-                this.automechanics.Add(automechanic);
-            }
+            this.automechanics = new List<Automechanic>();         
 
             garageParkingSpace = new List<Customer>();
             parkingLot = new List<Customer>();
@@ -109,6 +98,16 @@ namespace DISS_SEM2.Core
 
 
             this.frequency = 1; //kazda sekunda 
+
+            this.garage = new List<ParkingSpace>();
+            for (int i = 0; i < 5; i++)
+            {
+                var parking = new ParkingSpace();
+                parking._id = i + 1;
+                this.garage.Add(parking);
+            }
+            _simulationTime = 0;
+
         }
 
         public void addCustomerToLine(Customer _customer)
@@ -145,13 +144,6 @@ namespace DISS_SEM2.Core
         {
             return this.customersLineQ.First();
 
-            /*if (this.customersLine.Count != 0)
-            {
-                var customer = this.customersLine[0];
-                return customer;
-            }
-            return null;*/
-
         }
         /// <summary>
         /// returns customer from first place in payment line
@@ -160,13 +152,6 @@ namespace DISS_SEM2.Core
         public Customer getCustomerInPaymentLine()
         {
             return paymentLineQ.First();
-
-            /*if (this.paymentLine.Count != 0)
-            {
-                var customer = this.paymentLine[0];
-                return customer;
-            }
-            return null;*/
         }
 
         public int getCustomersCountInLine()
@@ -253,12 +238,7 @@ namespace DISS_SEM2.Core
         public Customer getNextCarInGarage()
         {
             return this.garageParkingSpaceQ.First();
-            /*if (this.garageParkingSpace.Count != 0)
-            {
-                var nextCar = this.garageParkingSpace[0];
-                return nextCar;
-            }
-            return null;*/
+
         }
         /// <summary>
         /// removes specified car from parking lot in front of dielna
@@ -369,6 +349,123 @@ namespace DISS_SEM2.Core
         public List<Customer> getCustomersInLine()
         {
             return this.customersLineQ.ToList();
+        }
+
+        public bool reserveParkingSpace(Customer customer_car) 
+        {
+            var parkingSpace = this.getAvailableParkingSpace();
+            if (parkingSpace != null)
+            {
+                parkingSpace.free = false;
+                parkingSpace.parkedCar = customer_car;
+                return true;
+            }
+            return false;
+        }
+
+        public bool isParkingFree()
+        {
+            for (int i = 0; i < this.garage.Count; i++)
+            {
+                if (this.garage[i].free)
+                {
+                    return true;
+                }
+            }
+            return false;
+        
+        }
+        public bool reserveParking() 
+        {
+            for (int i = 0; i < this.garage.Count; i++)
+            {
+                if (this.garage[i].free)
+                {
+                    this.garage[i].free = false;
+                    return true;
+                }
+            }
+            return false;
+        }
+        public bool freeParking() 
+        {
+            for (int i = 0; i < this.garage.Count; i++)
+            {
+                if (!this.garage[i].free)
+                {
+                    this.garage[i].free = true;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool freeParkingSpace(Customer customer)
+        {
+            for (int i = 0; i < this.garage.Count; i++)
+            {
+                if (this.garage[i].parkedCar == customer)
+                {
+                    this.garage[i].parkedCar = null;
+                    this.garage[i].free = true;
+                    return true;
+                }
+            }  
+            return false;
+        }
+
+        public ParkingSpace getAvailableParkingSpace() 
+        {
+            for (int i = 0; i < this.garage.Count; i++)
+            {
+                if (this.garage[i].free)
+                {
+                    return this.garage[i];
+                }
+            }
+            return null;
+        }
+        public int getReserverParkingPlaces()
+        {
+            var number = 0;
+            for (int i = 0; i < this.garage.Count; i++)
+            {
+                if (!this.garage[i].free)
+                {
+                    number++;
+                }
+            }
+            return number;
+        }
+
+        public void createTechnicians(int number) 
+        {
+            for (int i = 0; i < number; i++)
+            {
+                var technic = new Technician();
+                technic._id = i;
+                this.technicians.Add(technic);
+            }
+        }
+
+        public void createAutomechanics(int number)
+        {
+            for (int i = 0; i < number; i++)
+            {
+                var automech = new Automechanic();
+                automech._id = i;
+                this.automechanics.Add(automech);
+            }
+        }
+
+        public void setSimulationTime(int _time)
+        { 
+            this._simulationTime = _time;
+        }
+
+        public int getSimulationTime()
+        {
+            return this._simulationTime;
         }
     }
 

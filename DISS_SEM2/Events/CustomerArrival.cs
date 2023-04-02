@@ -39,6 +39,7 @@ namespace DISS_SEM2.Events
             {
                 if (((STK)core).getCustomersCountInPaymentLine() > 0)
                 {
+                    //tato situacia by nemala nikdy nastat
                     var paymentTime = ((STK)core).paymentTimeGenerator.Next() + time;
                     var paymentCustomer = ((STK)core).getCustomerInPaymentLine();
                     ((STK)core).removeCustomerFromPaymentLine();
@@ -48,8 +49,7 @@ namespace DISS_SEM2.Events
                 }
                 else
                 {
-
-                    if (((STK)core).getCarsCountInGarage() < 5)
+                    if (((STK)core).reserveParking())
                     {
                         var takeoverTime = ((STK)core).takeOverTimeGenerator.Next() + time;
                         technic.obsluhuje = true;
@@ -57,6 +57,19 @@ namespace DISS_SEM2.Events
                         var newTakeover = new StartTakeOver(core, takeoverTime, customer, technic, null);
                         core.AddEvent(newTakeover);
                     }
+
+                    /*var parkingPlace = ((STK)core).getAvailableParkingSpace();
+                    if (parkingPlace!= null)
+                    {
+                        if (((STK)core).reserveParkingSpace(customer)) //reservuje miesto
+                        {
+                            var takeoverTime = ((STK)core).takeOverTimeGenerator.Next() + time;
+                            technic.obsluhuje = true;
+                            technic.customer_car = customer;
+                            var newTakeover = new StartTakeOver(core, takeoverTime, customer, technic, null);
+                            core.AddEvent(newTakeover);
+                        } 
+                    }*/
                     else
                     {
                         ((STK)core).addCustomerToLine(customer);

@@ -3,6 +3,7 @@ using DISS_SEM2.Objects.Cars;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,6 +22,12 @@ namespace DISS_SEM2.Events
             //cas inspection
             //naplanovat end
             automechanic.customer_car = customer;
+            /*if (((STK)core).freeParkingSpace(customer))
+            {
+                throw new Exception();
+            }*/
+            
+            ((STK)core).freeParking(); //bez referencie - iba counter 
             double endsinspectionTime;
             if (customer.getCar().type == CarTypes.Personal)
             {
@@ -38,9 +45,52 @@ namespace DISS_SEM2.Events
             core.AddEvent(endInspection);
 
 
-            //uvolni sa miesto v garazi tak mozem automaticky vyvolat novy takeover
+            //uvolni sa miesto v garazi tak mozem automaticky vyvolat novy takeover ak nikto necaka v rade na platenie
             
 
+            
+            var technic = ((STK)core).getAvailableTechnician();
+            if (technic != null)
+            {
+                if (((STK)core).getCustomersCountInPaymentLine() > 0)
+                {
+                    //payment
+                    var paymentTime = ((STK)core).paymentTimeGenerator.Next() + time;
+                    var payingCustomer = ((STK)core).getCustomerInPaymentLine();
+                    var newPayment = new Payment(core, paymentTime, payingCustomer, technic, null);
+                    core.AddEvent(newPayment);
+                    ((STK)core).removeCustomerFromPaymentLine();
+                }
+                else if (((STK)core).getCustomersCountInLine() > 0) 
+                {
+                    if (((STK)core).reserveParking())
+                    {
+                        
+                        //takeover
+                        var takeoverTime = ((STK)core).takeOverTimeGenerator.Next() + time;
+                        var takeoverCustomer = ((STK)core).getCustomerInLine();
+                        var newTakeOver = new StartTakeOver(core, takeoverTime, takeoverCustomer, technic, null);
+                        core.AddEvent(newTakeOver);
+                        ((STK)core).removeCustomerFromLine();
+
+                    }
+                    /*var parkingPlace = ((STK)core).getAvailableParkingSpace();
+                    if (parkingPlace != null)
+                    {
+                        if (((STK)core).reserveParkingSpace(customer)) //reservuje miesto
+                        {
+                            //takeover
+                            var takeoverTime = ((STK)core).takeOverTimeGenerator.Next() + time;
+                            var takeoverCustomer = ((STK)core).getCustomerInLine();
+                            var newTakeOver = new StartTakeOver(core, takeoverTime, takeoverCustomer, technic, null);
+                            core.AddEvent(newTakeOver);
+                            ((STK)core).removeCustomerFromLine();
+                        }
+                    }*/
+                    
+                }
+                
+            }
 
 
 
