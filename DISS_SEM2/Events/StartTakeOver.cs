@@ -17,6 +17,10 @@ namespace DISS_SEM2.Events
 
         public override void execute()
         {
+            //statistika ratam iba tym co prevezmu auto
+            ((STK)core).localAverageTimeToTakeOverCar.addValues(time - customer.arrivalTime);
+
+
             //prichod z customer arrival
             //technika mam 
             //auto mam

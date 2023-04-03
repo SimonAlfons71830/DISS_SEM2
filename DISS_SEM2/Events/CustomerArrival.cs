@@ -60,22 +60,13 @@ namespace DISS_SEM2.Events
                         var newTakeover = new StartTakeOver(core, takeoverTime, customer, technic, null);
                         core.AddEvent(newTakeover);
                     }
-
-                    /*var parkingPlace = ((STK)core).getAvailableParkingSpace();
-                    if (parkingPlace!= null)
-                    {
-                        if (((STK)core).reserveParkingSpace(customer)) //reservuje miesto
-                        {
-                            var takeoverTime = ((STK)core).takeOverTimeGenerator.Next() + time;
-                            technic.obsluhuje = true;
-                            technic.customer_car = customer;
-                            var newTakeover = new StartTakeOver(core, takeoverTime, customer, technic, null);
-                            core.AddEvent(newTakeover);
-                        } 
-                    }*/
                     else
                     {
                         ((STK)core).addCustomerToLine(customer);
+                        //ked pridavam do frontu, meni sa mi - robim statistiku
+                        var time = core.currentTime - ((STK)core).timeOfLastChange;
+                        ((STK)core).localAverageCustomerCountInLineToTakeOver.addValues(((STK)core).getCustomersCountInLine(), time);
+                        ((STK)core).timeOfLastChange = core.currentTime;
                     }
                     
                 }
@@ -84,45 +75,6 @@ namespace DISS_SEM2.Events
             {
                 ((STK)core).addCustomerToLine(customer);
             }
-
-
-
-
-
-
-            /*
-            var nextArrivalTime = ((STK)core).customerArrivalTimeGenerator.Next() + time;
-            if (nextArrivalTime > 24300)
-            {
-                return; //15:45
-            }
-            core.AddEvent(new CustomerArrival(core, nextArrivalTime, new Customer(nextArrivalTime, new Car(((STK)core).carTypeGenerator.Next())),null,null));
-
-
-            if (((STK)core).getCustomersCountInPaymentLine() == 0 && ((STK)core).getTechniciansCount() != 0)
-            {
-                //prebratie auta trva dlhsie a ludia chodia hned, tym padom 3ja dostanu toho isteho technika naraz
-                //rovno ked najdem available tak ho nastavim na obsluhuje ak sa vytvara event 
-                var technic = ((STK)core).getAvailableTechnician();
-                if (technic != null && ((STK)core).getParkedCarsCountInGarage() <= 5)
-                {
-                    //trojuholnikove rozdelenie na prijatie auta a preparkovanie do garaze
-                    var takeoverTime = ((STK)core).takeOverTimeGenerator.Next() + time;
-                    technic.obsluhuje = true;
-                    var startTakeOver = new StartTakeOver(core, takeoverTime, customer, technic, null);
-                    core.AddEvent(startTakeOver);
-                }
-                else
-                {
-                    ((STK)core).addCustomerToLine(customer);
-                }
-            }
-            else
-            {
-                ((STK)core).addCustomerToLine(customer);
-            }*/
-            
-
 
         }
     }

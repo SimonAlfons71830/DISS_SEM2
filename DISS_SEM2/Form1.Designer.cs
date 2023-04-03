@@ -212,7 +212,6 @@
             this.label12.Size = new System.Drawing.Size(203, 16);
             this.label12.TabIndex = 26;
             this.label12.Text = "Reserved garage parking space";
-            this.label12.Click += new System.EventHandler(this.label12_Click);
             // 
             // label13
             // 

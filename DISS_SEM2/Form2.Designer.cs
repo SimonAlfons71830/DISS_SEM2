@@ -77,7 +77,7 @@
             // numericUpDown1
             // 
             this.numericUpDown1.Increment = new decimal(new int[] {
-            100000,
+            10000,
             0,
             0,
             0});
@@ -158,9 +158,9 @@
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(23, 186);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(248, 16);
+            this.label7.Size = new System.Drawing.Size(223, 16);
             this.label7.TabIndex = 9;
-            this.label7.Text = "Average waiting time of customer  in STK";
+            this.label7.Text = "Average time customer spent in STK";
             // 
             // label8
             // 
@@ -174,7 +174,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(461, 186);
+            this.label9.Location = new System.Drawing.Point(454, 186);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(44, 16);
             this.label9.TabIndex = 11;
@@ -239,9 +239,9 @@
             this.label16.AutoSize = true;
             this.label16.Location = new System.Drawing.Point(23, 337);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(187, 16);
+            this.label16.Size = new System.Drawing.Size(194, 16);
             this.label16.TabIndex = 18;
-            this.label16.Text = "Average customer cont in STK";
+            this.label16.Text = "Average customer count in STK";
             // 
             // label17
             // 
@@ -342,6 +342,7 @@
             this.button2.TabIndex = 29;
             this.button2.Text = "PAUSE";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // button3
             // 
@@ -351,6 +352,7 @@
             this.button3.TabIndex = 30;
             this.button3.Text = "RESUME";
             this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // Form2
             // 

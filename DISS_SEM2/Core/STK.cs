@@ -51,30 +51,43 @@ namespace DISS_SEM2.Core
         private int CarsCountGarage { get; set; }
         private int _ids;
         private int _simulationTime;
-        Random carGenerator;
         //cas zmeny
         public double timeOfLastChange;
 
-        public Statistics averageCustomerTimeInSTK;
-        public Statistics averageTimeToTakeOverCar;
-        public Statistics averageCustomerCountInLineToTakeOver;
-        public Statistics averageCustomerCountInSTK;
-        public Statistics averageFreeTechnicianCount;
-        public Statistics averageFreeAutomechanicCount;
-        public Statistics averageCustomerCountEndOfDay;
+        public Statistics localAverageCustomerTimeInSTK;
+        public Statistics localAverageTimeToTakeOverCar;
+        public WeightedStatistics localAverageCustomerCountInLineToTakeOver;
+        public WeightedStatistics localAverageCustomerCountInSTK;
+        public WeightedStatistics localAverageFreeTechnicianCount;
+        public WeightedStatistics localAverageFreeAutomechanicCount;
+        public WeightedStatistics localAverageCustomerCountEndOfDay;
 
-
+        public Statistics globalAverageCustomerTimeInSTK;
+        public Statistics globalAverageTimeToTakeOverCar;
+        public WeightedStatistics globalAverageCustomerCountInLineToTakeOver;
+        public WeightedStatistics globalAverageCustomerCountInSTK;
+        public WeightedStatistics globalAverageFreeTechnicianCount;
+        public WeightedStatistics globalAverageFreeAutomechanicCount;
+        public WeightedStatistics globalAverageCustomerCountEndOfDay;
 
         public STK()
         {
-            averageCustomerTimeInSTK = new Statistics();
-            averageTimeToTakeOverCar = new Statistics();
-            averageCustomerCountInLineToTakeOver = new Statistics();
-            averageCustomerCountInSTK = new Statistics();
-            averageFreeTechnicianCount = new Statistics();
-            averageFreeAutomechanicCount = new Statistics();
-            averageCustomerCountEndOfDay = new Statistics();
+            localAverageCustomerTimeInSTK = new Statistics();
+            localAverageTimeToTakeOverCar = new Statistics();
+            localAverageCustomerCountInLineToTakeOver = new WeightedStatistics();
+            localAverageCustomerCountInSTK = new WeightedStatistics();
+            localAverageFreeTechnicianCount = new WeightedStatistics();
+            localAverageFreeAutomechanicCount = new WeightedStatistics();
+            localAverageCustomerCountEndOfDay = new WeightedStatistics();
 
+            globalAverageCustomerTimeInSTK = new Statistics();
+            globalAverageTimeToTakeOverCar = new Statistics() ;
+            globalAverageCustomerCountInLineToTakeOver = new WeightedStatistics();
+            globalAverageCustomerCountInSTK= new WeightedStatistics();
+            globalAverageFreeTechnicianCount = new WeightedStatistics();
+            globalAverageFreeAutomechanicCount = new WeightedStatistics();
+            globalAverageCustomerCountEndOfDay = new WeightedStatistics();
+            
 
             this.customersLineQ = new SimplePriorityQueue<Customer, double>();
             this.paymentLineQ = new SimplePriorityQueue<Customer, double>();
@@ -86,7 +99,7 @@ namespace DISS_SEM2.Core
             double _mi = 3600.0 / 23.0;
             this.customerArrivalTimeGenerator = new Exponential(this.seedGenerator, _mi);
             this.takeOverTimeGenerator = new Triangular(this.seedGenerator, 180, 695, 431);
-            this.carGenerator = new Random(this.seedGenerator.generate_seed());
+            //this.carGenerator = new Random(this.seedGenerator.generate_seed());
             this.technicians = new List<Technician>();
             this._ids = 0;
 
@@ -285,7 +298,7 @@ namespace DISS_SEM2.Core
 
         public void sleepSim()
         {
-            Thread.Sleep(this.speed);
+            Thread.Sleep(this.replications);
         }
 
         public int ReturnSpeed()
@@ -497,11 +510,29 @@ namespace DISS_SEM2.Core
         {
             return this.mode;
         }
-
+        /// <summary>
+        /// priemerny cas zakaznika v celom systeme
+        /// nesmie prekrocit 70 min
+        /// </summary>
+        /// <returns></returns>
         public double getStatI()
         {
-            return this.averageCustomerTimeInSTK.getMean();
+            var sec = this.globalAverageCustomerTimeInSTK.getMean();
+            var min = sec / 60;
+            return min;
         }
+        /// <summary>
+        /// priemerny cas zakaznika v rade na odovzdanie auta 
+        /// nesmie prekrocit 10 min
+        /// </summary>
+        /// <returns></returns>
+        public double getStatII()
+        {
+            var sec = this.globalAverageTimeToTakeOverCar.getMean();
+            var min = sec / 60; 
+            return min;
+        }
+
     }
 
 }

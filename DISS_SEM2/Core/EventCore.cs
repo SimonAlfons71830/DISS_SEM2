@@ -16,6 +16,16 @@ namespace DISS_SEM2.Core
         //aktualny cas simulacie
         public double currentTime;
 
+        public override void Before()
+        {
+            base.Before();
+        }
+
+        public override void After() 
+        {
+            base.After(); 
+        }
+
         public override void BeforeReplication()
         {
             this.timeline = new SimplePriorityQueue<Event, double>();
@@ -31,7 +41,8 @@ namespace DISS_SEM2.Core
         }
         public override void AfterReplication()
         {
-
+            ((STK)this).globalAverageCustomerTimeInSTK.addValues(((STK)this).localAverageCustomerTimeInSTK.getMean());
+            ((STK)this).globalAverageTimeToTakeOverCar.addValues(((STK)this).localAverageTimeToTakeOverCar.getMean());
         }
 
         public override void Replication()
@@ -65,6 +76,5 @@ namespace DISS_SEM2.Core
             this.timeline.Enqueue(_event, _event.time);
         }
 
-        
     }
 }

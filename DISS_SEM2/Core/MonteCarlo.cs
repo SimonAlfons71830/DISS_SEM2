@@ -10,7 +10,7 @@ namespace DISS_SEM2.Core
 
     public abstract class MonteCarlo
     {
-        public int pocetreplikacii;
+        public int replications;
         public bool stop { get; set; }
 
         private Stopwatch stopwatch;
@@ -19,31 +19,39 @@ namespace DISS_SEM2.Core
         //hodnoty do grafu
         public virtual void AfterReplication() 
         {
-            //zobrazit na gui vysledky 
+            //zapisovat si do globalnych statistik priemery z lokalnych statistik 
         }
         //nastavit casomieru
         public virtual void Before()
         {
-            //stopwatch = new Stopwatch();
-            //stopwatch.Start();
+            
         }
         //zastavit casomieru
         public virtual void After()
         {
-            //stopwatch.Stop();
-            //var time = stopwatch.ElapsedMilliseconds;
+
         }
 
         public abstract void Replication();
 
-        public void Simulation()
+        public void Simulation(int _numberOfReplications)
         {
+            this.stop = false;
             this.Before();
-            
-            this.BeforeReplication();
-            this.Replication();
-            this.AfterReplication();
+            this.replications = _numberOfReplications;
+            for (int i = 0; i < this.replications; i++) //input z textbox
+            {
+                if (stop)
+                {
+                    ((STK)this).sleepSim();
+                    break;
+                }
+                this.BeforeReplication();
+                this.Replication();
+                this.AfterReplication();
+            }
             this.After();
+
         }
     }
 }

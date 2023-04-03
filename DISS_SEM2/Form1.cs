@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using DISS_SEM2.Core;
 
@@ -32,7 +26,7 @@ namespace DISS_SEM2
         public void refresh(STK _simulationCore)
         {
             _simCore.SetSpeed((int)numericUpDown1.Value);
-            while (true)
+            /*while (true)
             {
                 if (!paused)
                 {
@@ -40,7 +34,7 @@ namespace DISS_SEM2
                 }
                 this._simCore.sleepSim();
 
-            }
+            }*/
             //currecnt time v sim sa stale updatuje
             //nemozem pripocitat zakazdym novsi cas
             //pripocitat rozdiel medzi _simTime a current time do _simtime
@@ -208,17 +202,18 @@ namespace DISS_SEM2
 
         private void startSimulation()
         {
-            this._simCore.Simulation();
+            this._simCore.Simulation(1);
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            paused = true;
+            //paused = true;
+            _simCore.stop = true;
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            paused = false;
+            _simCore.stop = false;
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -226,14 +221,5 @@ namespace DISS_SEM2
             Application.Exit();
         }
 
-        private void listView1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label12_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }

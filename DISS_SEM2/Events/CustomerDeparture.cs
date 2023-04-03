@@ -16,7 +16,7 @@ namespace DISS_SEM2.Events
         public override void execute()
         {
             //statistics
-            ((STK)core).averageCustomerTimeInSTK.addValues(time - customer.arrivalTime);
+            ((STK)core).localAverageCustomerTimeInSTK.addValues(time - customer.arrivalTime);
 
             //uvolni technika
             //naplanuje novu platbu
@@ -54,23 +54,6 @@ namespace DISS_SEM2.Events
                             core.AddEvent(newTakeover);
                             ((STK)core).removeCustomerFromLine();
                         }
-
-
-                        /*var parkingPlace = ((STK)core).getAvailableParkingSpace();
-                        if (parkingPlace != null)
-                        {
-                            if (((STK)core).reserveParkingSpace(customer)) //reservuje miesto
-                            {
-                                var takeoverTime = ((STK)core).takeOverTimeGenerator.Next() + time;
-                                var takeoverCustomer = ((STK)core).getCustomerInLine();
-
-                                technic.obsluhuje = true;
-                                technic.customer_car = takeoverCustomer;
-                                var newTakeover = new StartTakeOver(core, takeoverTime, takeoverCustomer, technic, null);
-                                core.AddEvent(newTakeover);
-                                ((STK)core).removeCustomerFromLine();
-                            }
-                        }*/
                     }
                 }
             }
