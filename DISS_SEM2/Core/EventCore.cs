@@ -24,7 +24,10 @@ namespace DISS_SEM2.Core
             var newCustomer = new Customer(0, new Car(((STK)this).carTypeGenerator.Next()));
             ((STK)this).setId(newCustomer);
             this.AddEvent(new CustomerArrival(this, 0, newCustomer, null, null));
-            this.AddEvent(new SystemEvent(this, 0, null, null, null));
+            if (((STK)this).getMode() == 1)
+            {//slow mode
+                this.AddEvent(new SystemEvent(this, 0, null, null, null));
+            }
         }
         public override void AfterReplication()
         {
@@ -46,7 +49,10 @@ namespace DISS_SEM2.Core
                 _event = this.timeline.Dequeue();
                 //aktualny cas sa nastavi na cas eventu
                 this.currentTime = _event.time; //getter
-                ((STK)this).Notify();
+                if (((STK)this).getMode() == 1)
+                { //slow mode
+                    ((STK)this).Notify();
+                }
                 //osetrenie casu -> uz sa dalsi event nevykona
                 if (this.currentTime > maxTime) { break; }
                 _event.execute();

@@ -17,7 +17,10 @@ namespace DISS_SEM2.Core
         //vynulovanie hodnot
         public virtual void BeforeReplication() { }
         //hodnoty do grafu
-        public virtual void AfterReplication() { }
+        public virtual void AfterReplication() 
+        {
+            //zobrazit na gui vysledky 
+        }
         //nastavit casomieru
         public virtual void Before()
         {
@@ -36,12 +39,10 @@ namespace DISS_SEM2.Core
         public void Simulation()
         {
             this.Before();
-            // for (int i = 0; i < 10000; i++)
-            //{
+            
             this.BeforeReplication();
             this.Replication();
             this.AfterReplication();
-            //}
             this.After();
         }
     }

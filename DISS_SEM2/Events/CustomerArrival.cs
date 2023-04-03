@@ -24,13 +24,16 @@ namespace DISS_SEM2.Events
             //ak nieje nikto v payment line tak kontrolujem dostupne parkovacie miesto
             // ak je free customerovi naplanuje takeover ak nieje free park miesto davam ho do rady
             // ak NEMAM free technika -> zakaznik ide do rady (prio je arrival time)
-
+            
             var nextTime = ((STK)core).customerArrivalTimeGenerator.Next() + time;
-            var nextCar = new Car(((STK)core).carTypeGenerator.Next());
-            var nextCustomer = new Customer(nextTime, nextCar);
-            ((STK)core).setId(nextCustomer);
-            var nextArrival = new CustomerArrival(core,nextTime,nextCustomer,null,null);
-            core.AddEvent(nextArrival);
+            if (nextTime <= 24300)
+            {
+                var nextCar = new Car(((STK)core).carTypeGenerator.Next());
+                var nextCustomer = new Customer(nextTime, nextCar);
+                ((STK)core).setId(nextCustomer);
+                var nextArrival = new CustomerArrival(core, nextTime, nextCustomer, null, null);
+                core.AddEvent(nextArrival);
+            }
 
             var technic = ((STK)core).getAvailableTechnician();
             // bud je to technic ktory neobsluhuje alebo null

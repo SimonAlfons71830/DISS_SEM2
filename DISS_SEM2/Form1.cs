@@ -194,20 +194,15 @@ namespace DISS_SEM2
             _simCore.setSimulationTime(time);
 
             paused = false;
-            if (!radioButton1.Checked && !radioButton2.Checked || 
-                numericUpDown2.Value == 0 || numericUpDown3.Value == 0 || numericUpDown4.Value == 0) 
+            if (numericUpDown2.Value == 0 || numericUpDown3.Value == 0 || numericUpDown4.Value == 0) 
             {
                 MessageBox.Show("SET REQUIRED PARAMETERS.");
             }
-            else if (radioButton1.Checked)
+            else
             {
                 thread1 = new Thread(new ThreadStart(this.startSimulation));
                 thread1.IsBackground = true;
                 thread1.Start();
-            }else
-            {
-                var fastMode = new Form2(this._simCore);
-                fastMode.ShowDialog();
             }
         }
 

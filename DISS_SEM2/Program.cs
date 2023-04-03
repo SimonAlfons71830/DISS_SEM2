@@ -35,7 +35,7 @@ namespace DISS_SEM2
             var stk = new STK();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1(stk));
+            Application.Run(new Form3(stk));
         }
     }
 }

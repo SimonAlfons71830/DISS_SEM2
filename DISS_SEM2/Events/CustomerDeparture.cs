@@ -15,6 +15,8 @@ namespace DISS_SEM2.Events
         }
         public override void execute()
         {
+            //statistics
+            ((STK)core).averageCustomerTimeInSTK.addValues(time - customer.arrivalTime);
 
             //uvolni technika
             //naplanuje novu platbu
@@ -72,7 +74,7 @@ namespace DISS_SEM2.Events
                     }
                 }
             }
-
+            
 
 
         }

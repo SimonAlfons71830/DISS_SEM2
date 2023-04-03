@@ -19,6 +19,7 @@ namespace DISS_SEM2.Core
         List<ISTKObserver<STK>> _observers = new List<ISTKObserver<STK>>();
         private int speed;
         private double frequency;
+        private int mode;
         //objectList - cakajuci zakaznici
         //should be queue
         private SimplePriorityQueue<Customer,double> customersLineQ;
@@ -54,8 +55,27 @@ namespace DISS_SEM2.Core
         //cas zmeny
         public double timeOfLastChange;
 
+        public Statistics averageCustomerTimeInSTK;
+        public Statistics averageTimeToTakeOverCar;
+        public Statistics averageCustomerCountInLineToTakeOver;
+        public Statistics averageCustomerCountInSTK;
+        public Statistics averageFreeTechnicianCount;
+        public Statistics averageFreeAutomechanicCount;
+        public Statistics averageCustomerCountEndOfDay;
+
+
+
         public STK()
         {
+            averageCustomerTimeInSTK = new Statistics();
+            averageTimeToTakeOverCar = new Statistics();
+            averageCustomerCountInLineToTakeOver = new Statistics();
+            averageCustomerCountInSTK = new Statistics();
+            averageFreeTechnicianCount = new Statistics();
+            averageFreeAutomechanicCount = new Statistics();
+            averageCustomerCountEndOfDay = new Statistics();
+
+
             this.customersLineQ = new SimplePriorityQueue<Customer, double>();
             this.paymentLineQ = new SimplePriorityQueue<Customer, double>();
             this.garageParkingSpaceQ = new SimplePriorityQueue<Customer, double>();
@@ -107,7 +127,7 @@ namespace DISS_SEM2.Core
                 this.garage.Add(parking);
             }
             _simulationTime = 0;
-
+            mode = 1; //fast je 2 
         }
 
         public void addCustomerToLine(Customer _customer)
@@ -466,6 +486,21 @@ namespace DISS_SEM2.Core
         public int getSimulationTime()
         {
             return this._simulationTime;
+        }
+
+        public void setMode(int _number)
+        {
+            this.mode = _number;
+        }
+
+        public int getMode()
+        {
+            return this.mode;
+        }
+
+        public double getStatI()
+        {
+            return this.averageCustomerTimeInSTK.getMean();
         }
     }
 
