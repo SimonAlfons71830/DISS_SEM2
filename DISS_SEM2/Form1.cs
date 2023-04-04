@@ -198,11 +198,16 @@ namespace DISS_SEM2
                 thread1.IsBackground = true;
                 thread1.Start();
             }
+            
         }
 
         private void startSimulation()
         {
             this._simCore.Simulation(1);
+            this.Invoke((MethodInvoker)delegate
+            {
+                label22.Text = (this._simCore.localAverageCustomerTimeInSTK.getMean() / 60).ToString("0.0000")+ " min";
+            });
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -221,5 +226,9 @@ namespace DISS_SEM2
             Application.Exit();
         }
 
+        private void label22_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

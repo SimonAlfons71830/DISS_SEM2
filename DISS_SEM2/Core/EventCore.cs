@@ -4,6 +4,7 @@ using Priority_Queue;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,14 +20,21 @@ namespace DISS_SEM2.Core
 
         public override void Before()
         {
-            //vynulovat globalne statistiky
-            ((STK)this).globalAverageCustomerTimeInSTK.resetStatistic();
-            ((STK)this).globalAverageCustomerCountEndOfDay.resetStatistic();
-            ((STK)this).globalAverageTimeToTakeOverCar.resetStatistic();
-            ((STK)this).globalAverageCustomerCountInLineToTakeOver.resetStatistic();
-            ((STK)this).globalAverageFreeTechnicianCount.resetStatistic();
-            ((STK)this).globalAverageFreeAutomechanicCount.resetStatistic();
-            ((STK)this).globalAverageCustomerCountEndOfDay.resetStatistic();
+            if (((STK)this).getMode() == 2)
+            {
+                //vynulovat globalne statistiky
+                ((STK)this).globalAverageCustomerTimeInSTK.resetStatistic();
+                ((STK)this).globalAverageCustomerCountEndOfDay.resetStatistic();
+                ((STK)this).globalAverageTimeToTakeOverCar.resetStatistic();
+                ((STK)this).globalAverageCustomerCountInLineToTakeOver.resetStatistic();
+                ((STK)this).globalAverageFreeTechnicianCount.resetStatistic();
+                ((STK)this).globalAverageFreeAutomechanicCount.resetStatistic();
+                ((STK)this).globalAverageCustomerCountEndOfDay.resetStatistic();
+                ((STK)this).globalAverageCustomerCountEndOfDay.resetStatistic();
+                ((STK)this).powerOfCustomerCountInSTK.Clear();
+                ((STK)this).powerOfCustomerTimeInSTK.Clear();
+            }
+            
         }
 
         public override void After() 
@@ -38,7 +46,18 @@ namespace DISS_SEM2.Core
         {   //vynulovat lokalne statistiky
             if (((STK)this).getMode() == 2)
             {//fast
-                ((STK)this).localAverageCustomerTimeInSTK.resetStatistic();
+                ((STK)this).resetGarage();
+                ((STK)this).resetTechnicians();
+                ((STK)this).resetAutomechanics();
+                ((STK)this).customerscount = 0;
+                ((STK)this).currentTime = 0;
+                ((STK)this).powerOfCustomerCountInSTK.Clear();
+                ((STK)this).powerOfCustomerTimeInSTK.Clear();
+                ((STK)this)._ids = 0;
+                ((STK)this).CarsCountGarage = 0;
+                //((STK)this).resetQueues();
+
+                
                 ((STK)this).localAverageCustomerCountEndOfDay.resetStatistic();
                 ((STK)this).localAverageTimeToTakeOverCar.resetStatistic();
                 ((STK)this).localAverageCustomerCountInLineToTakeOver.resetStatistic();
@@ -46,8 +65,9 @@ namespace DISS_SEM2.Core
                 ((STK)this).localAverageFreeAutomechanicCount.resetStatistic();
                 ((STK)this).localAverageCustomerCountEndOfDay.resetStatistic();
                 ((STK)this).localAverageCustomerCountInSTK.resetStatistic();
+                ((STK)this).localAverageCustomerCountEndOfDay.resetStatistic();
             }
-
+            ((STK)this).localAverageCustomerTimeInSTK.resetStatistic();
 
 
             this.timeline = new SimplePriorityQueue<Event, double>();
@@ -56,12 +76,14 @@ namespace DISS_SEM2.Core
             var newCustomer = new Customer(0, new Car(((STK)this).carTypeGenerator.Next()));
             ((STK)this).setId(newCustomer);
             this.AddEvent(new CustomerArrival(this, 0, newCustomer, null, null));
+
             if (((STK)this).getMode() == 1)
             {//slow mode
                 this.AddEvent(new SystemEvent(this, 0, null, null, null));
             }
 
         }
+
         public override void AfterReplication()
         {
             this.replications++;
@@ -74,15 +96,19 @@ namespace DISS_SEM2.Core
                     //dokonci 
                 }*/
 
-
+                //nastavi finalny cas z ktoreho sa bude robit priemer
                 ((STK)this).localAverageCustomerCountInLineToTakeOver.setFinalTimeOfLastChange(this.maxTime);
                 ((STK)this).localAverageFreeTechnicianCount.setFinalTimeOfLastChange(this.maxTime);
                 ((STK)this).localAverageFreeAutomechanicCount.setFinalTimeOfLastChange(this.maxTime);
                 ((STK)this).localAverageCustomerCountInSTK.setFinalTimeOfLastChange(this.maxTime);
 
+                ((STK)this).localAverageCustomerCountEndOfDay.addValues(((STK)this).customerscount);
+
+                ((STK)this).endCustomersWaiting();
+
 
                 var meanofstatI = ((STK)this).localAverageCustomerTimeInSTK.getMean();
-                if (meanofstatI == 0)
+                if (meanofstatI == -1)
                 {
                     return; //?????
                 }
@@ -94,6 +120,7 @@ namespace DISS_SEM2.Core
                 ((STK)this).globalAverageFreeAutomechanicCount.addValues(((STK)this).localAverageFreeAutomechanicCount.getMean());
                 ((STK)this).globalAverageCustomerCountEndOfDay.addValues(((STK)this).localAverageCustomerCountEndOfDay.getMean());
                 ((STK)this).globalAverageCustomerCountInSTK.addValues(((STK)this).localAverageCustomerCountInSTK.getMean());
+                ((STK)this).globalAverageCustomerCountEndOfDay.addValues(((STK)this).localAverageCustomerCountEndOfDay.getMean());
 
                 ((STK)this).Notify();
             }

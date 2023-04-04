@@ -45,6 +45,7 @@ namespace DISS_SEM2.Events
                 var customerFromGarage = ((STK)core).getNextCarInGarage();
                 newAutomechanic.obsluhuje = true;
                 newAutomechanic.customer_car = customerFromGarage;
+
                 var startInsepction = new StartInspection(core, time, customerFromGarage, null, newAutomechanic);
                 core.AddEvent(startInsepction);
                 ((STK)core).removeCarFromGarage();
@@ -88,6 +89,12 @@ namespace DISS_SEM2.Events
                             var takeoverCustomer = ((STK)core).getCustomerInLine();
                             technic.obsluhuje = true;
                             technic.customer_car = takeoverCustomer;
+
+
+                            //statistika ratam iba tym co prevezmu auto
+                            var _takeovertimestat = time - takeoverCustomer.arrivalTime;
+                            ((STK)core).localAverageTimeToTakeOverCar.addValues(_takeovertimestat);
+
                             var newTakeover = new StartTakeOver(core, takeoverTime, takeoverCustomer, technic, null);
                             core.AddEvent(newTakeover);
 

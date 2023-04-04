@@ -17,9 +17,10 @@ namespace DISS_SEM2.Events
 
         public override void execute()
         {
-            //statistika ratam iba tym co prevezmu auto
-            ((STK)core).localAverageTimeToTakeOverCar.addValues(time - customer.arrivalTime);
 
+            /*//statistika ratam iba tym co prevezmu auto
+            var _takeovertimestat = time - customer.arrivalTime;
+            ((STK)core).localAverageTimeToTakeOverCar.addValues(_takeovertimestat);*/
 
             //prichod z customer arrival
             //technika mam 
@@ -28,7 +29,7 @@ namespace DISS_SEM2.Events
             //priradim auto technikovi
             //zaparkujem do garaze
             //vyvolam end takeover - cas ten isty, technic ten isty, automechanik stale null
-            
+
             technician.customer_car = customer;
             ((STK)core).parkCarInGarage(customer);
             var endTakeover = new EndTakeOver(core, time, customer, technician, null);

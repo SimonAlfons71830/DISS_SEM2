@@ -26,7 +26,7 @@ namespace DISS_SEM2
         {
             if (this.count == 0)
             {
-                return 0;
+                return -1;
             }
             else
             {

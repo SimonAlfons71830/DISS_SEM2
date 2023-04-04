@@ -21,8 +21,6 @@ namespace DISS_SEM2.Generators
         }
 
         //https://www.eg.bucknell.edu/~xmeng/Course/CS6337/Note/master/node50.html
-        // -LOG(1-Ri)/lambda -> v zatvorke generovane cislo od (0-1> ,
-        // moze byt prepisane iba ako -LOG(Ri)/lambda <0,1) (INPUT ANALYZER OVERENE)
         public override double Next()
         {
             double x = -Math.Log(1 - this.random.NextDouble()) / this.lambda;

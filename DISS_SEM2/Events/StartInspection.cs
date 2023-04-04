@@ -72,7 +72,14 @@ namespace DISS_SEM2.Events
                         //takeover
                         var takeoverTime = ((STK)core).takeOverTimeGenerator.Next() + time;
                         var takeoverCustomer = ((STK)core).getCustomerInLine();
+
+
+                        //statistika ratam iba tym co prevezmu auto
+                        var _takeovertimestat = time - takeoverCustomer.arrivalTime;
+                        ((STK)core).localAverageTimeToTakeOverCar.addValues(_takeovertimestat);
                         var newTakeOver = new StartTakeOver(core, takeoverTime, takeoverCustomer, technic, null);
+
+
                         core.AddEvent(newTakeOver);
 
                         //stat

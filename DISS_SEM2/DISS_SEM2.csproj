@@ -61,6 +61,18 @@
       <DependentUpon>Form3.cs</DependentUpon>
     </Compile>
     <Compile Include="Generators\CarGenerator.cs" />
+    <Compile Include="Graph1Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Graph1Form.Designer.cs">
+      <DependentUpon>Graph1Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Graph2Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Graph2Form.Designer.cs">
+      <DependentUpon>Graph2Form.cs</DependentUpon>
+    </Compile>
     <Compile Include="ISTKObserver.cs" />
     <Compile Include="Objects\Cars\CarTypes.cs" />
     <Compile Include="Objects\ParkingSpace.cs" />
@@ -106,6 +118,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form3.resx">
       <DependentUpon>Form3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Graph1Form.resx">
+      <DependentUpon>Graph1Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Graph2Form.resx">
+      <DependentUpon>Graph2Form.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

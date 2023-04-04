@@ -25,7 +25,7 @@ namespace DISS_SEM2
         {
             if (this.timeOfLastChange == 0)
             {
-                return 0;
+                return -1;
             }
             else
             {

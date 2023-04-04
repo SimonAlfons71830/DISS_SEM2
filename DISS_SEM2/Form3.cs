@@ -22,7 +22,7 @@ namespace DISS_SEM2
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (!radioButton1.Checked && !radioButton2.Checked)
+            if (!radioButton1.Checked && !radioButton2.Checked && !radioButton3.Checked && !radioButton4.Checked)
             {
                 MessageBox.Show("CHOOSE A MODE!");
             }
@@ -32,13 +32,29 @@ namespace DISS_SEM2
                 this._sim.setMode(1);
                 formSlow.ShowDialog();
             }
-            else
+            else if (radioButton2.Checked)
             {
                 var formFast = new Form2(this._sim);
                 this._sim.setMode(2);
                 formFast.ShowDialog();
+
             }
+            else if (radioButton3.Checked) 
+            {
+                var formGraph1 = new Graph1Form(this._sim);
+                this._sim.setMode(2);
+                formGraph1.ShowDialog();    
+            }
+            else //(radioButton4.Checked)
+            { 
+                var formGraph2 = new Graph2Form(this._sim);
+                this._sim.setMode(2);
+                formGraph2.ShowDialog();
+            }
+
+
             
         }
+
     }
 }

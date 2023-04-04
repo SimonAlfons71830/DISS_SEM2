@@ -27,7 +27,9 @@ namespace DISS_SEM2.Events
 
             ((STK)core).localAverageCustomerCountInSTK.addValues(((STK)core).customerscount, core.currentTime - ((STK)core).localAverageCustomerCountInSTK.timeOfLastChange);
             ((STK)core).localAverageCustomerCountInSTK.setFinalTimeOfLastChange(core.currentTime);
+
             ((STK)core).powerOfCustomerCountInSTK.Add(((STK)core).customerscount);
+
             ((STK)core).customerscount++;
             
 
@@ -72,7 +74,13 @@ namespace DISS_SEM2.Events
                         var takeoverTime = ((STK)core).takeOverTimeGenerator.Next() + time;
                         technic.obsluhuje = true;
                         technic.customer_car = customer;
+
+                        //statistika ratam iba tym co prevezmu auto
+                        var _takeovertimestat = time - customer.arrivalTime;
+                        ((STK)core).localAverageTimeToTakeOverCar.addValues(_takeovertimestat);
+
                         var newTakeover = new StartTakeOver(core, takeoverTime, customer, technic, null);
+
                         core.AddEvent(newTakeover);
                     }
                     else

@@ -32,7 +32,7 @@ namespace DISS_SEM2.Core
         private SimplePriorityQueue<Customer, double> garageParkingSpaceQ;
         //parkovacie miesta pred dielnou
         private List<Customer> parkingLot;
-        private List<ParkingSpace> garage;
+        public List<ParkingSpace> garage;
 
         //generator nasad
         private SeedGenerator seedGenerator;
@@ -48,8 +48,8 @@ namespace DISS_SEM2.Core
         public CarGenerator carTypeGenerator { get; set; }
         //boolean obsluhuje
         public bool obsluhuje { get; set; }
-        private int CarsCountGarage { get; set; }
-        private int _ids;
+        public int CarsCountGarage { get; set; }
+        public int _ids;
         private int _simulationTime;
         //cas zmeny
         public double timeOfLastChange;
@@ -596,36 +596,35 @@ namespace DISS_SEM2.Core
         }
 
 
-        public double[] getInterval(List<double> _values, double _prob)
+        public double[] ConfidenceInterval(List<double> squaredValues, double probability)
         {
-            double[] interval = new double[2];
-            double mean = _values.Average();
-            double standardDeviation = 0.0;
-            int count = _values.Count;
+            double mean = squaredValues.Average();
+            double standardDeviation = Math.Sqrt(squaredValues.Average(v => Math.Pow(v - mean, 2)));
+            double zScore = GetZScore(probability);
 
-            // Vypočítajte smerodajnú odchýlku
-            foreach (double value in _values)
-            {
-                standardDeviation += Math.Pow((value - mean), 2);
-            }
-            standardDeviation = Math.Sqrt(standardDeviation / (count - 1));
+            double marginOfError = zScore * standardDeviation / Math.Sqrt(squaredValues.Count);
+            double lowerLimit = mean - marginOfError;
+            double upperLimit = mean + marginOfError;
 
-            double criticalValue = 0;
-            // Vypočítajte interval
-            if (_prob == 0.9)
-            {
-                criticalValue = 1.645;
-            }
-            else if (_prob == 0.95)
-            {
-               criticalValue = 1.96;
-            }
-            double marginOfError = criticalValue * (standardDeviation / Math.Sqrt(count));
-            interval[0] = Math.Sqrt(mean - marginOfError);
-            interval[1] = Math.Sqrt(mean + marginOfError);
-
-            return interval;
+            return new double[] { lowerLimit, upperLimit };
         }
+
+        private double GetZScore(double probability)
+        {
+            double zScore = 0.0;
+
+            if (probability == 0.9)
+                zScore = 1.645;
+            else if (probability == 0.95)
+                zScore = 1.96;
+            else if (probability == 0.99)
+                zScore = 2.576;
+            else
+                throw new ArgumentException("Invalid probability value. Supported values are 0.9, 0.95 and 0.99.");
+
+            return zScore;
+        }
+
         /// <summary>
         /// pocet zakaznikov v stk
         /// </summary>
@@ -635,6 +634,65 @@ namespace DISS_SEM2.Core
             return this.globalAverageCustomerCountInSTK.getMean();
         }
 
+        public double getStatVII()
+        { 
+            return this.globalAverageCustomerCountEndOfDay.getMean();
+        }
+
+        public void resetGarage()
+        {
+            for (int i = 0; i < this.garage.Count; i++)
+            {
+                this.garage[i].free = true;
+            }
+        }
+
+        public void resetTechnicians()
+        {
+            for (int i = 0; i < this.technicians.Count; i++)
+            {
+                this.technicians[i].obsluhuje = false;
+            }
+        }
+
+        public void resetAutomechanics()
+        {
+            for (int i = 0; i < this.automechanics.Count; i++)
+            {
+                this.automechanics[i].obsluhuje = false;
+            }
+        }
+
+        public void resetQueues()
+        {
+            this.customersLineQ.Clear();
+            this.garageParkingSpaceQ.Clear();
+            this.paymentLineQ.Clear();
+            CarsCountGarage = 0;
+            _ids = 0;
+            _simulationTime = 0;
+            //cas zmeny
+            timeOfLastChange = 0;
+            customerscount = 0;
+
+        }
+
+        public void endCustomersWaiting()
+        {
+            for (int i = 0; i < this.customersLineQ.Count; i++)
+            {
+                //this.powerOfCustomerCountInSTK.Add(this.customersLineQ.Count);
+                var customer = this.customersLineQ.Dequeue();
+                this.localAverageCustomerTimeInSTK.addValues(this.currentTime - customer.arrivalTime);
+                
+                this.powerOfCustomerTimeInSTK.Add(this.currentTime - customer.arrivalTime);
+            }
+        }
+
+        public int notFinishedCustomers()
+        {
+            return this.customerscount;
+        }
     }
 
 }
