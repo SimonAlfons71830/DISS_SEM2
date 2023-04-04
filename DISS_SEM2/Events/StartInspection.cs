@@ -22,10 +22,7 @@ namespace DISS_SEM2.Events
             //cas inspection
             //naplanovat end
             automechanic.customer_car = customer;
-            /*if (((STK)core).freeParkingSpace(customer))
-            {
-                throw new Exception();
-            }*/
+            
             
             ((STK)core).freeParking(); //bez referencie - iba counter 
             double endsinspectionTime;
@@ -46,13 +43,19 @@ namespace DISS_SEM2.Events
 
 
             //uvolni sa miesto v garazi tak mozem automaticky vyvolat novy takeover ak nikto necaka v rade na platenie
-            
+            if (((STK)core).getAvailableTechnicianCount() > 0)
+            {
+                var _timeTechnic = core.currentTime - ((STK)core).localAverageFreeTechnicianCount.timeOfLastChange;
+                ((STK)core).localAverageFreeTechnicianCount.addValues(((STK)core).getAvailableTechnicianCount(), _timeTechnic);
+                ((STK)core).localAverageFreeTechnicianCount.setFinalTimeOfLastChange(core.currentTime);
+            }
 
-            
+            //ak je volny technik tak nikto necaka na platbu
             var technic = ((STK)core).getAvailableTechnician();
             if (technic != null)
             {
-                if (((STK)core).getCustomersCountInPaymentLine() > 0)
+
+                /*if (((STK)core).getCustomersCountInPaymentLine() > 0)
                 {
                     //payment
                     var paymentTime = ((STK)core).paymentTimeGenerator.Next() + time;
@@ -61,7 +64,7 @@ namespace DISS_SEM2.Events
                     core.AddEvent(newPayment);
                     ((STK)core).removeCustomerFromPaymentLine();
                 }
-                else if (((STK)core).getCustomersCountInLine() > 0) 
+                else*/ if (((STK)core).getCustomersCountInLine() > 0) 
                 {
                     if (((STK)core).reserveParking())
                     {
@@ -71,52 +74,21 @@ namespace DISS_SEM2.Events
                         var takeoverCustomer = ((STK)core).getCustomerInLine();
                         var newTakeOver = new StartTakeOver(core, takeoverTime, takeoverCustomer, technic, null);
                         core.AddEvent(newTakeOver);
+
+                        //stat
+                        var _time = core.currentTime - ((STK)core).localAverageCustomerCountInLineToTakeOver.timeOfLastChange;
+                        ((STK)core).localAverageCustomerCountInLineToTakeOver.addValues(((STK)core).getCustomersCountInLine(), _time);
+                        ((STK)core).localAverageCustomerCountInLineToTakeOver.setFinalTimeOfLastChange(core.currentTime);
+
                         ((STK)core).removeCustomerFromLine();
 
                     }
-                    /*var parkingPlace = ((STK)core).getAvailableParkingSpace();
-                    if (parkingPlace != null)
-                    {
-                        if (((STK)core).reserveParkingSpace(customer)) //reservuje miesto
-                        {
-                            //takeover
-                            var takeoverTime = ((STK)core).takeOverTimeGenerator.Next() + time;
-                            var takeoverCustomer = ((STK)core).getCustomerInLine();
-                            var newTakeOver = new StartTakeOver(core, takeoverTime, takeoverCustomer, technic, null);
-                            core.AddEvent(newTakeOver);
-                            ((STK)core).removeCustomerFromLine();
-                        }
-                    }*/
+                    
                     
                 }
                 
             }
 
-
-
-
-
-
-
-            /*
-            //automechanic.obsluhuje = true;
-
-            double timeOfInspection; ;
-            if (automechanic.customer_car.getCar().type == Objects.Cars.CarTypes.Personal)
-            {
-                timeOfInspection = ((STK)core).personalCarInspectionGenerator.Next();
-            }
-            else if (automechanic.customer_car.getCar().type == Objects.Cars.CarTypes.Van)
-            {
-                timeOfInspection = ((STK)core).vanCarInspectionGenerator.Next();
-            }
-            else
-            {
-                timeOfInspection = ((STK)core).cargoCarInspectionGenerator.Next();
-            }
-
-            var endInspection = new EndInspection(core, timeOfInspection, customer, null, automechanic);
-            core.AddEvent(endInspection);*/
         }
     }
 }

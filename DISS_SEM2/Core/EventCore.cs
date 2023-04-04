@@ -15,19 +15,41 @@ namespace DISS_SEM2.Core
         public SimplePriorityQueue<Event, double> timeline;
         //aktualny cas simulacie
         public double currentTime;
+        private double maxTime;
 
         public override void Before()
         {
-            base.Before();
+            //vynulovat globalne statistiky
+            ((STK)this).globalAverageCustomerTimeInSTK.resetStatistic();
+            ((STK)this).globalAverageCustomerCountEndOfDay.resetStatistic();
+            ((STK)this).globalAverageTimeToTakeOverCar.resetStatistic();
+            ((STK)this).globalAverageCustomerCountInLineToTakeOver.resetStatistic();
+            ((STK)this).globalAverageFreeTechnicianCount.resetStatistic();
+            ((STK)this).globalAverageFreeAutomechanicCount.resetStatistic();
+            ((STK)this).globalAverageCustomerCountEndOfDay.resetStatistic();
         }
 
         public override void After() 
         {
-            base.After(); 
+            
         }
 
         public override void BeforeReplication()
-        {
+        {   //vynulovat lokalne statistiky
+            if (((STK)this).getMode() == 2)
+            {//fast
+                ((STK)this).localAverageCustomerTimeInSTK.resetStatistic();
+                ((STK)this).localAverageCustomerCountEndOfDay.resetStatistic();
+                ((STK)this).localAverageTimeToTakeOverCar.resetStatistic();
+                ((STK)this).localAverageCustomerCountInLineToTakeOver.resetStatistic();
+                ((STK)this).localAverageFreeTechnicianCount.resetStatistic();
+                ((STK)this).localAverageFreeAutomechanicCount.resetStatistic();
+                ((STK)this).localAverageCustomerCountEndOfDay.resetStatistic();
+                ((STK)this).localAverageCustomerCountInSTK.resetStatistic();
+            }
+
+
+
             this.timeline = new SimplePriorityQueue<Event, double>();
             this.currentTime = 0;
 
@@ -38,11 +60,46 @@ namespace DISS_SEM2.Core
             {//slow mode
                 this.AddEvent(new SystemEvent(this, 0, null, null, null));
             }
+
         }
         public override void AfterReplication()
         {
-            ((STK)this).globalAverageCustomerTimeInSTK.addValues(((STK)this).localAverageCustomerTimeInSTK.getMean());
-            ((STK)this).globalAverageTimeToTakeOverCar.addValues(((STK)this).localAverageTimeToTakeOverCar.getMean());
+            this.replications++;
+
+            if (((STK)this).getMode() == 2)
+            {//fast
+
+               /* if (this.timeline.Count != 0)
+                {
+                    //dokonci 
+                }*/
+
+
+                ((STK)this).localAverageCustomerCountInLineToTakeOver.setFinalTimeOfLastChange(this.maxTime);
+                ((STK)this).localAverageFreeTechnicianCount.setFinalTimeOfLastChange(this.maxTime);
+                ((STK)this).localAverageFreeAutomechanicCount.setFinalTimeOfLastChange(this.maxTime);
+                ((STK)this).localAverageCustomerCountInSTK.setFinalTimeOfLastChange(this.maxTime);
+
+
+                var meanofstatI = ((STK)this).localAverageCustomerTimeInSTK.getMean();
+                if (meanofstatI == 0)
+                {
+                    return; //?????
+                }
+
+                ((STK)this).globalAverageCustomerTimeInSTK.addValues(meanofstatI);
+                ((STK)this).globalAverageTimeToTakeOverCar.addValues(((STK)this).localAverageTimeToTakeOverCar.getMean());
+                ((STK)this).globalAverageCustomerCountInLineToTakeOver.addValues(((STK)this).localAverageCustomerCountInLineToTakeOver.getMean());
+                ((STK)this).globalAverageFreeTechnicianCount.addValues(((STK)this).localAverageFreeTechnicianCount.getMean());
+                ((STK)this).globalAverageFreeAutomechanicCount.addValues(((STK)this).localAverageFreeAutomechanicCount.getMean());
+                ((STK)this).globalAverageCustomerCountEndOfDay.addValues(((STK)this).localAverageCustomerCountEndOfDay.getMean());
+                ((STK)this).globalAverageCustomerCountInSTK.addValues(((STK)this).localAverageCustomerCountInSTK.getMean());
+
+                ((STK)this).Notify();
+            }
+            
+
+
         }
 
         public override void Replication()
@@ -51,8 +108,9 @@ namespace DISS_SEM2.Core
             this.Simulate(((STK)this).getSimulationTime());
         }
 
-        public void Simulate(double maxTime)
+        public void Simulate(double _maxTime)
         {
+            this.maxTime = _maxTime;
             Event _event;
             while (this.timeline.Count != 0)
             {
@@ -65,7 +123,7 @@ namespace DISS_SEM2.Core
                     ((STK)this).Notify();
                 }
                 //osetrenie casu -> uz sa dalsi event nevykona
-                if (this.currentTime > maxTime) { break; }
+                if (this.currentTime > this.maxTime) { break; }
                 _event.execute();
             }
 

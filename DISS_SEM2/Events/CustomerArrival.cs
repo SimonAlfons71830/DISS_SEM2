@@ -24,7 +24,13 @@ namespace DISS_SEM2.Events
             //ak nieje nikto v payment line tak kontrolujem dostupne parkovacie miesto
             // ak je free customerovi naplanuje takeover ak nieje free park miesto davam ho do rady
             // ak NEMAM free technika -> zakaznik ide do rady (prio je arrival time)
+
+            ((STK)core).localAverageCustomerCountInSTK.addValues(((STK)core).customerscount, core.currentTime - ((STK)core).localAverageCustomerCountInSTK.timeOfLastChange);
+            ((STK)core).localAverageCustomerCountInSTK.setFinalTimeOfLastChange(core.currentTime);
+            ((STK)core).powerOfCustomerCountInSTK.Add(((STK)core).customerscount);
+            ((STK)core).customerscount++;
             
+
             var nextTime = ((STK)core).customerArrivalTimeGenerator.Next() + time;
             if (nextTime <= 24300)
             {
@@ -35,11 +41,20 @@ namespace DISS_SEM2.Events
                 core.AddEvent(nextArrival);
             }
 
+            if (((STK)core).getAvailableTechnicianCount() > 0)
+            {
+                var _timeTechnic = core.currentTime - ((STK)core).localAverageFreeTechnicianCount.timeOfLastChange;
+                ((STK)core).localAverageFreeTechnicianCount.addValues(((STK)core).getAvailableTechnicianCount(), _timeTechnic);
+                ((STK)core).localAverageFreeTechnicianCount.setFinalTimeOfLastChange(core.currentTime);
+            }
+
             var technic = ((STK)core).getAvailableTechnician();
             // bud je to technic ktory neobsluhuje alebo null
 
             if (technic != null)
             {
+
+
                 if (((STK)core).getCustomersCountInPaymentLine() > 0)
                 {
                     //tato situacia by nemala nikdy nastat
@@ -62,17 +77,22 @@ namespace DISS_SEM2.Events
                     }
                     else
                     {
-                        ((STK)core).addCustomerToLine(customer);
                         //ked pridavam do frontu, meni sa mi - robim statistiku
-                        var time = core.currentTime - ((STK)core).timeOfLastChange;
-                        ((STK)core).localAverageCustomerCountInLineToTakeOver.addValues(((STK)core).getCustomersCountInLine(), time);
-                        ((STK)core).timeOfLastChange = core.currentTime;
+                        var _time = core.currentTime - ((STK)core).localAverageCustomerCountInLineToTakeOver.timeOfLastChange;
+                        ((STK)core).localAverageCustomerCountInLineToTakeOver.addValues(((STK)core).getCustomersCountInLine(), _time);
+                        ((STK)core).localAverageCustomerCountInLineToTakeOver.setFinalTimeOfLastChange(core.currentTime);
+
+                        ((STK)core).addCustomerToLine(customer);
                     }
                     
                 }
             }
             else
             {
+                var _time = core.currentTime - ((STK)core).localAverageCustomerCountInLineToTakeOver.timeOfLastChange;
+                ((STK)core).localAverageCustomerCountInLineToTakeOver.addValues(((STK)core).getCustomersCountInLine(), _time);
+                ((STK)core).localAverageCustomerCountInLineToTakeOver.setFinalTimeOfLastChange(core.currentTime);
+
                 ((STK)core).addCustomerToLine(customer);
             }
 

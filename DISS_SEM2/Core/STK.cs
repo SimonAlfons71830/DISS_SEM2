@@ -53,40 +53,48 @@ namespace DISS_SEM2.Core
         private int _simulationTime;
         //cas zmeny
         public double timeOfLastChange;
+        public int customerscount;
 
         public Statistics localAverageCustomerTimeInSTK;
         public Statistics localAverageTimeToTakeOverCar;
         public WeightedStatistics localAverageCustomerCountInLineToTakeOver;
-        public WeightedStatistics localAverageCustomerCountInSTK;
         public WeightedStatistics localAverageFreeTechnicianCount;
         public WeightedStatistics localAverageFreeAutomechanicCount;
-        public WeightedStatistics localAverageCustomerCountEndOfDay;
+        public WeightedStatistics localAverageCustomerCountInSTK;
+        public Statistics localAverageCustomerCountEndOfDay;
 
         public Statistics globalAverageCustomerTimeInSTK;
         public Statistics globalAverageTimeToTakeOverCar;
-        public WeightedStatistics globalAverageCustomerCountInLineToTakeOver;
-        public WeightedStatistics globalAverageCustomerCountInSTK;
-        public WeightedStatistics globalAverageFreeTechnicianCount;
-        public WeightedStatistics globalAverageFreeAutomechanicCount;
-        public WeightedStatistics globalAverageCustomerCountEndOfDay;
+        public Statistics globalAverageCustomerCountInLineToTakeOver;
+        public Statistics globalAverageFreeTechnicianCount;
+        public Statistics globalAverageFreeAutomechanicCount;
+        public Statistics globalAverageCustomerCountEndOfDay;
+        public Statistics globalAverageCustomerCountInSTK;
+
+        public List<double> powerOfCustomerTimeInSTK;
+        public List<double> powerOfCustomerCountInSTK;
 
         public STK()
         {
+            powerOfCustomerTimeInSTK = new List<double>();
+            powerOfCustomerCountInSTK = new List<double>();
+            customerscount = 0;
+
+            localAverageCustomerCountInSTK = new WeightedStatistics();
             localAverageCustomerTimeInSTK = new Statistics();
             localAverageTimeToTakeOverCar = new Statistics();
             localAverageCustomerCountInLineToTakeOver = new WeightedStatistics();
-            localAverageCustomerCountInSTK = new WeightedStatistics();
             localAverageFreeTechnicianCount = new WeightedStatistics();
             localAverageFreeAutomechanicCount = new WeightedStatistics();
-            localAverageCustomerCountEndOfDay = new WeightedStatistics();
+            localAverageCustomerCountEndOfDay = new Statistics();
 
+            globalAverageCustomerCountInSTK = new Statistics();
             globalAverageCustomerTimeInSTK = new Statistics();
             globalAverageTimeToTakeOverCar = new Statistics() ;
-            globalAverageCustomerCountInLineToTakeOver = new WeightedStatistics();
-            globalAverageCustomerCountInSTK= new WeightedStatistics();
-            globalAverageFreeTechnicianCount = new WeightedStatistics();
-            globalAverageFreeAutomechanicCount = new WeightedStatistics();
-            globalAverageCustomerCountEndOfDay = new WeightedStatistics();
+            globalAverageCustomerCountInLineToTakeOver = new Statistics();
+            globalAverageFreeTechnicianCount = new Statistics();
+            globalAverageFreeAutomechanicCount = new Statistics();
+            globalAverageCustomerCountEndOfDay = new Statistics();
             
 
             this.customersLineQ = new SimplePriorityQueue<Customer, double>();
@@ -214,6 +222,7 @@ namespace DISS_SEM2.Core
         { return this.technicians.Count; }
         public int getAutomechanicsCount()
         { return this.automechanics.Count; }
+
 
         public Technician getAvailableTechnician()
         {
@@ -365,7 +374,31 @@ namespace DISS_SEM2.Core
         {
             this.CarsCountGarage--;
         }
+        public int getAvailableTechnicianCount()
+        {
+            int numb = 0;
+            for (int i = 0; i < this.technicians.Count; i++)
+            {
+                if (!this.technicians[i].obsluhuje)
+                {
+                    numb++;
+                }
+            }
+            return numb;
+        }
 
+        public int getAvailableAutomechanicCount()
+        {
+            int numb = 0;
+            for (int i = 0; i < this.automechanics.Count; i++)
+            {
+                if (!this.automechanics[i].obsluhuje)
+                {
+                    numb++;
+                }
+            }
+            return numb;
+        }
         public List<Technician> getTechnicianList()
         {
             return this.technicians;
@@ -531,6 +564,75 @@ namespace DISS_SEM2.Core
             var sec = this.globalAverageTimeToTakeOverCar.getMean();
             var min = sec / 60; 
             return min;
+        }
+        /// <summary>
+        /// customers in waiting line count
+        /// </summary>
+        /// <returns></returns>
+        public double getStatIII()
+        {
+            return this.globalAverageCustomerCountInLineToTakeOver.getMean(); ;
+        }
+        /// <summary>
+        /// free technicians
+        /// </summary>
+        /// <returns></returns>
+        public double getStatIV()
+        { 
+            return this.globalAverageFreeTechnicianCount.getMean();
+        }
+
+        /// <summary>
+        /// free automechanics
+        /// </summary>
+        /// <returns></returns>
+        public double getStatV()
+        { 
+            return this.globalAverageFreeAutomechanicCount.getMean();
+        }
+        public int getActualReplication()
+        {
+            return this.replications;
+        }
+
+
+        public double[] getInterval(List<double> _values, double _prob)
+        {
+            double[] interval = new double[2];
+            double mean = _values.Average();
+            double standardDeviation = 0.0;
+            int count = _values.Count;
+
+            // Vypočítajte smerodajnú odchýlku
+            foreach (double value in _values)
+            {
+                standardDeviation += Math.Pow((value - mean), 2);
+            }
+            standardDeviation = Math.Sqrt(standardDeviation / (count - 1));
+
+            double criticalValue = 0;
+            // Vypočítajte interval
+            if (_prob == 0.9)
+            {
+                criticalValue = 1.645;
+            }
+            else if (_prob == 0.95)
+            {
+               criticalValue = 1.96;
+            }
+            double marginOfError = criticalValue * (standardDeviation / Math.Sqrt(count));
+            interval[0] = Math.Sqrt(mean - marginOfError);
+            interval[1] = Math.Sqrt(mean + marginOfError);
+
+            return interval;
+        }
+        /// <summary>
+        /// pocet zakaznikov v stk
+        /// </summary>
+        /// <returns></returns>
+        public double getStatVI()
+        {
+            return this.globalAverageCustomerCountInSTK.getMean();
         }
 
     }

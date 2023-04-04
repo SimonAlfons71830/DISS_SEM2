@@ -15,7 +15,9 @@ namespace DISS_SEM2.Core
 
         private Stopwatch stopwatch;
         //vynulovanie hodnot
-        public virtual void BeforeReplication() { }
+        public virtual void BeforeReplication() {
+            
+        }
         //hodnoty do grafu
         public virtual void AfterReplication() 
         {
@@ -24,7 +26,7 @@ namespace DISS_SEM2.Core
         //nastavit casomieru
         public virtual void Before()
         {
-            
+            this.replications = 0;   
         }
         //zastavit casomieru
         public virtual void After()
@@ -38,8 +40,8 @@ namespace DISS_SEM2.Core
         {
             this.stop = false;
             this.Before();
-            this.replications = _numberOfReplications;
-            for (int i = 0; i < this.replications; i++) //input z textbox
+            
+            for (int i = 0; i < _numberOfReplications; i++) //input z textbox
             {
                 if (stop)
                 {

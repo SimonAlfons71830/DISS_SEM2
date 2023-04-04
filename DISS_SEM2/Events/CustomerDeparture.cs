@@ -16,19 +16,42 @@ namespace DISS_SEM2.Events
         public override void execute()
         {
             //statistics
+            var pom = time - customer.arrivalTime; 
+            if (pom <= 0) {
+                return;
+            }
             ((STK)core).localAverageCustomerTimeInSTK.addValues(time - customer.arrivalTime);
-
+            ((STK)core).powerOfCustomerTimeInSTK.Add(time - customer.arrivalTime);
             //uvolni technika
             //naplanuje novu platbu
             //ak nikto nieje v rade tak naplanuje start takeovber
 
+            //predtym ako ho pridam
+            var _timeTechnicBack = core.currentTime - ((STK)core).localAverageFreeTechnicianCount.timeOfLastChange;
+            ((STK)core).localAverageFreeTechnicianCount.addValues(((STK)core).getAvailableTechnicianCount(), _timeTechnicBack);
+            ((STK)core).localAverageFreeTechnicianCount.setFinalTimeOfLastChange(core.currentTime);
+
             technician.obsluhuje = false;
+            //pridali sme ho do volnych 
+
+
+
             technician.customer_car = null;
+
+            if (((STK)core).getAvailableTechnicianCount() > 0)
+            {
+                //predtym ako ho vyberiem
+                var _timeTechnic = core.currentTime - ((STK)core).localAverageFreeTechnicianCount.timeOfLastChange;
+                ((STK)core).localAverageFreeTechnicianCount.addValues(((STK)core).getAvailableTechnicianCount(), _timeTechnic);
+                ((STK)core).localAverageFreeTechnicianCount.setFinalTimeOfLastChange(core.currentTime);
+            }
+
 
             var technic = ((STK)core).getAvailableTechnician();
 
             if (technic != null) 
             {
+
                 if (((STK)core).getCustomersCountInPaymentLine() > 0) 
                 {
                     //platba
@@ -52,13 +75,24 @@ namespace DISS_SEM2.Events
                             technic.customer_car = takeoverCustomer;
                             var newTakeover = new StartTakeOver(core, takeoverTime, takeoverCustomer, technic, null);
                             core.AddEvent(newTakeover);
+
+                            //stat III
+                            var _time = core.currentTime - ((STK)core).localAverageCustomerCountInLineToTakeOver.timeOfLastChange;
+                            ((STK)core).localAverageCustomerCountInLineToTakeOver.addValues(((STK)core).getCustomersCountInLine(), _time);
+                            ((STK)core).localAverageCustomerCountInLineToTakeOver.setFinalTimeOfLastChange(core.currentTime);
+
                             ((STK)core).removeCustomerFromLine();
                         }
                     }
                 }
             }
-            
 
+
+            ((STK)core).localAverageCustomerCountInSTK.addValues(((STK)core).customerscount, core.currentTime - ((STK)core).localAverageCustomerCountInSTK.timeOfLastChange);
+            ((STK)core).localAverageCustomerCountInSTK.setFinalTimeOfLastChange(core.currentTime);
+            ((STK)core).powerOfCustomerCountInSTK.Add(((STK)core).customerscount);
+            ((STK)core).customerscount--;
+            
 
         }
     }

@@ -8,7 +8,7 @@ namespace DISS_SEM2
 {
     public class WeightedStatistics
     {
-        private double timeOfLastChange;
+        public double timeOfLastChange;
         private double value;
         public WeightedStatistics()
         {
@@ -18,12 +18,20 @@ namespace DISS_SEM2
 
         public void addValues(double _count, double _timeOfLastChange)
         {
-            this.value = _count * _timeOfLastChange;
+            this.value += _count * _timeOfLastChange;
         }
 
         public double getMean()
         {
-            return this.value / this.timeOfLastChange;
+            if (this.timeOfLastChange == 0)
+            {
+                return 0;
+            }
+            else
+            {
+                return this.value / this.timeOfLastChange;
+            }
+            
         }
 
         public void setFinalTimeOfLastChange(double _time)
@@ -31,6 +39,11 @@ namespace DISS_SEM2
             this.timeOfLastChange = _time;
         }
 
+        public void resetStatistic()
+        {
+            this.value = 0;
+            this.timeOfLastChange = 0;
+        }
         /*var cakanie = core.currentTime - (STK).timeOfLastChange;
         STK.statisticsChange.addValues(cakanie * STK.waitingLine());
         STK.timeOfLastChange = core.currentTime;*/

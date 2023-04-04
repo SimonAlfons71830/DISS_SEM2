@@ -22,8 +22,16 @@ namespace DISS_SEM2.Events
 
             ((STK)core).parkCarInParkingLot(automechanic.customer_car);
             ((STK)core).addCustomerToPaymentLine(automechanic.customer_car);
-            
+
             //viem ze sa niekto zaradil do radu na platenie, mozem dat robotu technikovi
+            //stat musim robit predtym ako ho vyberiem z listu
+            if (((STK)core).getAvailableTechnicianCount() >0)
+            {
+                var _timeTechnic = core.currentTime - ((STK)core).localAverageFreeTechnicianCount.timeOfLastChange;
+                ((STK)core).localAverageFreeTechnicianCount.addValues(((STK)core).getAvailableTechnicianCount(), _timeTechnic);
+                ((STK)core).localAverageFreeTechnicianCount.setFinalTimeOfLastChange(core.currentTime);
+            }
+
 
             var technic = ((STK)core).getAvailableTechnician();
             if (technic != null) 
@@ -36,15 +44,27 @@ namespace DISS_SEM2.Events
                 ((STK)core).removeCustomerFromPaymentLine();
             }
 
+
+
+            //predtym ako ho vratim do free obsluhovania
+                var _timeAutomechanicBack = core.currentTime - ((STK)core).localAverageFreeAutomechanicCount.timeOfLastChange;
+                ((STK)core).localAverageFreeAutomechanicCount.addValues(((STK)core).getAvailableAutomechanicCount(), _timeAutomechanicBack);
+                ((STK)core).localAverageFreeAutomechanicCount.setFinalTimeOfLastChange(core.currentTime);
             
-
-
 
             automechanic.obsluhuje = false;
             automechanic.customer_car = null;
 
             //pozriet do garaze
             //ak je tam auto naplanujem sam seba
+
+            if (((STK)core).getAvailableAutomechanicCount() > 0)
+            {
+                var _timeAutomechanicGet = core.currentTime - ((STK)core).localAverageFreeAutomechanicCount.timeOfLastChange;
+                ((STK)core).localAverageFreeAutomechanicCount.addValues(((STK)core).getAvailableAutomechanicCount(), _timeAutomechanicGet);
+                ((STK)core).localAverageFreeAutomechanicCount.setFinalTimeOfLastChange(core.currentTime);
+            }
+
 
             var newAutomechanic = ((STK)core).getAvailableAutomechanic();
 
@@ -61,66 +81,6 @@ namespace DISS_SEM2.Events
                 }
             }
             
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-
-            //nieje busy
-            automechanic.obsluhuje = false;
-            //preparkuje auto na parking lot
-            ((STK)core).parkCarInParkingLot(automechanic.customer_car);
-            //zakaznik prejde do payment line
-            ((STK)core).addCustomerToPaymentLine(automechanic.customer_car);// same as customer
-            automechanic.customer_car = null;
-            //moze vyvolat platbu ?
-            if (((STK)core).getFreeTechnicianCount() > 0)
-            {
-                var technic = ((STK)core).getAvailableTechnician();
-                if (technic != null)
-                {
-                    technic.obsluhuje = true;
-                    var nextCustomer = ((STK)core).getCustomerInPaymentLine();
-                    var nextPaymentTime = ((STK)core).paymentTimeGenerator.Next() + time;
-
-                    var newPayment = new Payment(core, nextPaymentTime, nextCustomer, technic, null);
-                    core.AddEvent(newPayment);
-                }
-            }
-
-            //skontroluje rad v dielni ak je tam nieco naplanuje novu inspection
-
-            if (((STK)core).getCarsCountInGarage() > 0)
-            {
-                //naplanujem prevzatie auta automechanikom (musim zacat od list[0]), 
-                var newAutomechanic = ((STK)core).getAvailableAutomechanic();
-                var nextCustomer = ((STK)core).getNextCarInGarage();
-                ((STK)core).removeCarFromGarage();
-
-                if (newAutomechanic != null && nextCustomer != null)
-                {
-                    newAutomechanic.customer_car = nextCustomer;
-                    newAutomechanic.obsluhuje = true;
-                    var startInspection = new StartInspection(core, time, nextCustomer , null, newAutomechanic);
-                    core.AddEvent(startInspection);
-                }
-            }*/
-
-            
-
         }
     }
 }

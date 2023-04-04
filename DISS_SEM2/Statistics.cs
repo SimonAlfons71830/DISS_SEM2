@@ -24,11 +24,24 @@ namespace DISS_SEM2
 
         public double getMean()
         {
-            return this.sum / this.count;
+            if (this.count == 0)
+            {
+                return 0;
+            }
+            else
+            {
+                return this.sum / this.count;
+            }
         }
         public double getSum() 
         { 
             return this.sum; 
+        }
+
+        public void resetStatistic()
+        {
+            this.sum = 0;
+            this.count = 0;
         }
     }
 }
