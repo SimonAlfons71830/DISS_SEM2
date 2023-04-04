@@ -43,7 +43,7 @@ namespace DISS_SEM2.Core
             
             for (int i = 0; i < _numberOfReplications; i++) //input z textbox
             {
-                if (stop)
+                while (stop)
                 {
                     ((STK)this).sleepSim();
                     break;

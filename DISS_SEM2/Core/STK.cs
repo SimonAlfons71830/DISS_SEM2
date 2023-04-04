@@ -25,8 +25,8 @@ namespace DISS_SEM2.Core
         private SimplePriorityQueue<Customer,double> customersLineQ;
         private SimplePriorityQueue<Customer, double> paymentLineQ;
 
-        private List<Technician> technicians;
-        private List<Automechanic> automechanics;
+        public List<Technician> technicians;
+        public List<Automechanic> automechanics;
         //parkovacie miesta v dielni, ako list sa lepsie pristupuje k ukladaniu objektu na prve volne miesto
         private List<Customer> garageParkingSpace;
         private SimplePriorityQueue<Customer, double> garageParkingSpaceQ;
@@ -516,6 +516,7 @@ namespace DISS_SEM2.Core
 
         public void createAutomechanics(int number)
         {
+            
             for (int i = 0; i < number; i++)
             {
                 var automech = new Automechanic();

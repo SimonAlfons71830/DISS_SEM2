@@ -64,6 +64,8 @@ namespace DISS_SEM2
 
         private void startSimulation()
         {
+
+
             this._simCore.Simulation((int)numericUpDown1.Value);
 
             this.Invoke((MethodInvoker)delegate
@@ -85,7 +87,24 @@ namespace DISS_SEM2
 
         private void button2_Click(object sender, EventArgs e)
         {
+            this.Invoke((MethodInvoker)delegate
+            {
+
+                label9.Text = this._simCore.getStatI().ToString("0.0000"); // formatovanie na 4 desatinne cisla
+                label10.Text = this._simCore.getStatII().ToString("0.0000");
+                label12.Text = this._simCore.getStatIII().ToString("0.0000");
+                label20.Text = this._simCore.getStatIV().ToString("0.0000");
+                label21.Text = this._simCore.getStatV().ToString("0.0000");
+                var pom = this._simCore.ConfidenceInterval(this._simCore.powerOfCustomerTimeInSTK, 0.9);
+                label25.Text = "< " + (pom[0] / 60).ToString("0.0000") + " - " + (pom[1] / 60).ToString("0.0000") + " >";
+                label17.Text = this._simCore.getStatVI().ToString("0.0000");
+                var pom2 = this._simCore.ConfidenceInterval(this._simCore.powerOfCustomerCountInSTK, 0.95);
+                label24.Text = "< " + pom2[0].ToString("0.0000") + " - " + pom2[1].ToString("0.0000") + " >";
+                label23.Text = this._simCore.getStatVII().ToString("0.0000");
+            });
+
             this._simCore.stop = true;
+
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -96,6 +115,14 @@ namespace DISS_SEM2
         private void label23_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void reset()
+        {
+            this._simCore.resetGarage();
+            this._simCore.resetAutomechanics();
+            this._simCore.resetTechnicians();
+            this._simCore.resetQueues();
         }
     }
 }

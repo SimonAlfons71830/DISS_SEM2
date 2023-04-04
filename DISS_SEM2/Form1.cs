@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
 using DISS_SEM2.Core;
@@ -26,15 +27,7 @@ namespace DISS_SEM2
         public void refresh(STK _simulationCore)
         {
             _simCore.SetSpeed((int)numericUpDown1.Value);
-            /*while (true)
-            {
-                if (!paused)
-                {
-                    break;
-                }
-                this._simCore.sleepSim();
-
-            }*/
+            
             //currecnt time v sim sa stale updatuje
             //nemozem pripocitat zakazdym novsi cas
             //pripocitat rozdiel medzi _simTime a current time do _simtime
@@ -163,8 +156,6 @@ namespace DISS_SEM2
 
             DoubleBuffered = true;
 
-
-
             dataTechnicians.Columns.Add("Technician ID", typeof(int));
             dataTechnicians.Columns.Add("Customer ID", typeof(int));
             dataTechnicians.Columns.Add("Status", typeof(string));
@@ -179,6 +170,19 @@ namespace DISS_SEM2
 
         private void button1_Click(object sender, EventArgs e)
         {
+            if (thread1 != null)
+            {
+                if (this._simCore.stop)
+                {
+                    thread1.Resume();
+                    
+                }
+                thread1.Abort();
+                this.reset();
+            }
+            
+
+
             _simCore.SetSpeed((int)numericUpDown1.Value);
 
             _simCore.createAutomechanics((int)numericUpDown3.Value);
@@ -198,7 +202,6 @@ namespace DISS_SEM2
                 thread1.IsBackground = true;
                 thread1.Start();
             }
-            
         }
 
         private void startSimulation()
@@ -213,12 +216,23 @@ namespace DISS_SEM2
         private void button2_Click(object sender, EventArgs e)
         {
             //paused = true;
-            _simCore.stop = true;
+            if (!_simCore.stop)
+            {
+                thread1.Suspend();
+                _simCore.stop = true;
+            }
+            
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            _simCore.stop = false;
+            
+            if (_simCore.stop)
+            {
+                thread1.Resume();
+                _simCore.stop = false;
+            }
+            
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -230,5 +244,22 @@ namespace DISS_SEM2
         {
 
         }
+
+        private void reset()
+        {
+            this._simCore.resetGarage();
+            this._simCore.resetAutomechanics();
+            this._simCore.resetTechnicians();
+            this._simCore.resetQueues();
+            this._simCore.technicians.Clear();
+            this._simCore.automechanics.Clear();
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e) 
+        { 
+            thread1.Abort();
+            e.Cancel = true;
+        }
+
     }
 }
