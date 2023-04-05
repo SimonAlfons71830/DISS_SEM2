@@ -57,12 +57,10 @@ namespace DISS_SEM2.Core
                 //((STK)this).resetQueues();
 
                 
-                ((STK)this).localAverageCustomerCountEndOfDay.resetStatistic();
                 ((STK)this).localAverageTimeToTakeOverCar.resetStatistic();
                 ((STK)this).localAverageCustomerCountInLineToTakeOver.resetStatistic();
                 ((STK)this).localAverageFreeTechnicianCount.resetStatistic();
                 ((STK)this).localAverageFreeAutomechanicCount.resetStatistic();
-                ((STK)this).localAverageCustomerCountEndOfDay.resetStatistic();
                 ((STK)this).localAverageCustomerCountInSTK.resetStatistic();
                 ((STK)this).localAverageCustomerCountEndOfDay.resetStatistic();
             }
@@ -78,6 +76,9 @@ namespace DISS_SEM2.Core
 
             if (((STK)this).getMode() == 1)
             {//slow mode
+
+                //pridanie na 9:00
+                this.AddEvent(new ControlEvent(this, 0, null, null, null));
                 this.AddEvent(new SystemEvent(this, 0, null, null, null));
             }
 
@@ -96,10 +97,13 @@ namespace DISS_SEM2.Core
                 }*/
 
                 //nastavi finalny cas z ktoreho sa bude robit priemer
+                
                 ((STK)this).localAverageCustomerCountInLineToTakeOver.setFinalTimeOfLastChange(this.maxTime);
                 ((STK)this).localAverageFreeTechnicianCount.setFinalTimeOfLastChange(this.maxTime);
                 ((STK)this).localAverageFreeAutomechanicCount.setFinalTimeOfLastChange(this.maxTime);
 
+
+                var pomC = ((STK)this).customerscount;
                 ((STK)this).localAverageCustomerCountEndOfDay.addValues(((STK)this).customerscount);
 
                 ((STK)this).endCustomersWaiting();
@@ -133,6 +137,11 @@ namespace DISS_SEM2.Core
             this.Simulate(((STK)this).getSimulationTime());
         }
 
+
+
+        //kontrolujeme kazdych 5 min kolko je zakaznikov v rade ak tam niekto caka viac ako 3 min tak ho odtial vyhodime
+
+
         public void Simulate(double _maxTime)
         {
             this.maxTime = _maxTime;
@@ -155,6 +164,7 @@ namespace DISS_SEM2.Core
                 if (this.currentTime > this.maxTime) { break; }
                 _event.execute();
             }
+            var pomCust = ((STK)this).customerscount;
 
         }
 

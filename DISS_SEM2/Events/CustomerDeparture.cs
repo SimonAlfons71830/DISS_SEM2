@@ -106,6 +106,7 @@ namespace DISS_SEM2.Events
             ((STK)core).localAverageCustomerCountInSTK.addValues(((STK)core).customerscount);
 
             ((STK)core).customerscount--;
+            //var pomC = ((STK)core).customerscount;
             
 
         }

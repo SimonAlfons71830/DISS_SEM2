@@ -41,7 +41,7 @@ namespace DISS_SEM2
         private void Form2_Load(object sender, EventArgs e)
         {
             
-            
+           
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -134,9 +134,18 @@ namespace DISS_SEM2
         }
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            thread1.Abort();
+            thread1.Interrupt();
             e.Cancel = true;
         }
 
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            /*if (thread1 != null && thread1.IsAlive)
+            {
+                thread1.Interrupt();
+            }*/
+
+            base.OnFormClosing(e);
+        }
     }
 }

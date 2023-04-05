@@ -77,5 +77,14 @@ namespace DISS_SEM2
         {
             pauseEvent1.Reset();
         }
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            /*if (thread1 != null && thread1.IsAlive)
+            {
+                thread1.Interrupt();
+            }*/
+
+            base.OnFormClosing(e);
+        }
     }
 }

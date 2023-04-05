@@ -274,10 +274,10 @@ namespace DISS_SEM2
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            if (thread1!=null)
+            /*if (thread1 != null && thread1.IsAlive)
             {
-                thread1.Abort();
-            }
+                thread1.Interrupt();
+            }*/
             
             base.OnFormClosing(e);
         }

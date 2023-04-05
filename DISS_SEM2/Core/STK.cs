@@ -22,7 +22,7 @@ namespace DISS_SEM2.Core
         private int mode;
         //objectList - cakajuci zakaznici
         //should be queue
-        private SimplePriorityQueue<Customer,double> customersLineQ;
+        public SimplePriorityQueue<Customer,double> customersLineQ;
         private SimplePriorityQueue<Customer, double> paymentLineQ;
 
         public List<Technician> technicians;

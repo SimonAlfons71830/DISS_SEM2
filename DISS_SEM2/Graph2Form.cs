@@ -62,6 +62,14 @@ namespace DISS_SEM2
             thread1.IsBackground = true;
             thread1.Start();
         }
-
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            /*if (thread1 != null && thread1.IsAlive)
+            {
+                thread1.Interrupt();
+            }
+*/
+            base.OnFormClosing(e);
+        }
     }
 }
