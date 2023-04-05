@@ -40,21 +40,32 @@ namespace DISS_SEM2
                 this._simulationCore.Simulation((int)numericUpDown1.Value);
                 this.updateChart(i, this._simulationCore.localAverageCustomerTimeInSTK.getMean()/60);
             }
-
+            bool  zive = thread1.IsAlive;
         }
 
         public void updateChart(int numberOfAutomechanics, double averageTime)
         {
-            this.Invoke((MethodInvoker)delegate
+            if (this.IsHandleCreated)
             {
-                time_chart.Series["Dependance"].Points.AddXY(numberOfAutomechanics, averageTime);
-                //time_chart.Update();
-                time_chart.Update();
-            });
+                this.Invoke((MethodInvoker)delegate
+                {
+                    time_chart.Series["Dependance"].Points.AddXY(numberOfAutomechanics, averageTime);
+                    //time_chart.Update();
+                    time_chart.Update();
+                });
+            }
         }
 
         private void button1_Click_1(object sender, EventArgs e)
         {
+            this._simulationCore.technicians.Clear();
+            this._simulationCore.automechanics.Clear();
+            this._simulationCore.resetGarage();
+
+            var pom = this._simulationCore.localAverageCustomerCountInLineToTakeOver.getMean();
+
+            this._simulationCore.currentTime = 0;
+
             time_chart.Series["Dependance"].Points.Clear();
             this._simulationCore.resetSim();
 
@@ -64,11 +75,12 @@ namespace DISS_SEM2
         }
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            /*if (thread1 != null && thread1.IsAlive)
+            if (thread1 != null || thread1.IsAlive)
             {
-                thread1.Interrupt();
+                thread1.Abort();
+                thread1 = null;
             }
-*/
+
             base.OnFormClosing(e);
         }
     }

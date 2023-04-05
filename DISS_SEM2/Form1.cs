@@ -38,113 +38,117 @@ namespace DISS_SEM2
             _simTime = _simTime.AddSeconds(time);
             var customersLine = _simulationCore.getCustomersCountInLine().ToString();
             var customerspaymantline = _simulationCore.getCustomersCountInPaymentLine().ToString();
-            this.Invoke((MethodInvoker)delegate {
-                label4.Text = _simTime.ToString("hh:mm:ss tt");
-
-                label5.Text = customersLine;
-                label7.Text = customerspaymantline;
-                label9.Text = _simulationCore.getFreeTechnicianCount().ToString() + "/" + _simulationCore.getAllTechniciansCount().ToString();
-                label11.Text = _simulationCore.getFreeAutomechanicCount().ToString() + "/" + _simulationCore.getAllAutomechanicCount().ToString();
-                label13.Text = _simulationCore.getReserverParkingPlaces().ToString() + "/" + "5";
-                label16.Text = _simulationCore.getCarsCountInGarage().ToString() + "/" + "5";
-
-                /*//datagrid technicians
-                dataTechnicians.Clear();
-                foreach (Technician technician in _simulationCore.getTechnicianList())
+            if (this.IsHandleCreated)
+            {
+                this.Invoke((MethodInvoker)delegate
                 {
-                    DataRow row = dataTechnicians.NewRow();
-                    row["Technician ID"] = technician._id;
+                    label4.Text = _simTime.ToString("hh:mm:ss tt");
 
+                    label5.Text = customersLine;
+                    label7.Text = customerspaymantline;
+                    label9.Text = _simulationCore.getFreeTechnicianCount().ToString() + "/" + _simulationCore.getAllTechniciansCount().ToString();
+                    label11.Text = _simulationCore.getFreeAutomechanicCount().ToString() + "/" + _simulationCore.getAllAutomechanicCount().ToString();
+                    label13.Text = _simulationCore.getReserverParkingPlaces().ToString() + "/" + "5";
+                    label16.Text = _simulationCore.getCarsCountInGarage().ToString() + "/" + "5";
 
-                    Customer customer = technician.customer_car; // assuming this method returns the customer the technician is working on
-                    if (customer != null)
+                    /*//datagrid technicians
+                    dataTechnicians.Clear();
+                    foreach (Technician technician in _simulationCore.getTechnicianList())
                     {
-                        row["Customer ID"] = customer._id;
-                        row["Status"] = "Busy";
-                    }
-                    else
-                    {
-                        row["Status"] = "Free";
-                    }
-
-                    dataTechnicians.Rows.Add(row);
-                }
+                        DataRow row = dataTechnicians.NewRow();
+                        row["Technician ID"] = technician._id;
 
 
-                // Bind the DataTable to the DataGridView
-                dataGridView1.DataSource = dataTechnicians;
+                        Customer customer = technician.customer_car; // assuming this method returns the customer the technician is working on
+                        if (customer != null)
+                        {
+                            row["Customer ID"] = customer._id;
+                            row["Status"] = "Busy";
+                        }
+                        else
+                        {
+                            row["Status"] = "Free";
+                        }
 
-                // Format the DataGridView
-                dataGridView1.RowHeadersVisible = true;
-                dataGridView1.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
-
-                // Format the "Status" column
-                DataGridViewCellStyle busyStyle = new DataGridViewCellStyle();
-                busyStyle.BackColor = Color.Red;
-                busyStyle.ForeColor = Color.White;
-
-                DataGridViewCellStyle freeStyle = new DataGridViewCellStyle();
-                freeStyle.BackColor = Color.Green;
-                freeStyle.ForeColor = Color.White;
-
-                foreach (DataGridViewRow row in dataGridView1.Rows)
-                {
-                    if (row.Cells["Status"].Value != null && row.Cells["Status"].Value.ToString() == "Busy")
-                    {
-                        row.Cells["Status"].Style = busyStyle;
-                    }
-                    else
-                    {
-                        row.Cells["Status"].Style = freeStyle;
-                    }
-                }
-
-
-                //datagrid automechanics
-                dataAutomechanics.Clear();
-                foreach (Automechanic automechanic in _simulationCore.getAutomechanicsList())
-                {
-                    DataRow row = dataAutomechanics.NewRow();
-                    row["Automechanic ID"] = automechanic._id;
-
-
-                    Customer customer = automechanic.customer_car; // assuming this method returns the customer the technician is working on
-                    if (customer != null)
-                    {
-                        row["Customer ID"] = customer._id;
-                        row["Status"] = "Busy";
-                    }
-                    else
-                    {
-                        row["Status"] = "Free";
+                        dataTechnicians.Rows.Add(row);
                     }
 
-                    dataAutomechanics.Rows.Add(row);
-                }
 
+                    // Bind the DataTable to the DataGridView
+                    dataGridView1.DataSource = dataTechnicians;
 
-                // Bind the DataTable to the DataGridView
-                dataGridView2.DataSource = dataAutomechanics;
+                    // Format the DataGridView
+                    dataGridView1.RowHeadersVisible = true;
+                    dataGridView1.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
 
-                // Format the DataGridView
-                dataGridView2.RowHeadersVisible = true;
-                dataGridView2.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
+                    // Format the "Status" column
+                    DataGridViewCellStyle busyStyle = new DataGridViewCellStyle();
+                    busyStyle.BackColor = Color.Red;
+                    busyStyle.ForeColor = Color.White;
 
-                // Format the "Status" column
+                    DataGridViewCellStyle freeStyle = new DataGridViewCellStyle();
+                    freeStyle.BackColor = Color.Green;
+                    freeStyle.ForeColor = Color.White;
 
-                foreach (DataGridViewRow row in dataGridView2.Rows)
-                {
-                    if (row.Cells["Status"].Value != null && row.Cells["Status"].Value.ToString() == "Busy")
+                    foreach (DataGridViewRow row in dataGridView1.Rows)
                     {
-                        row.Cells["Status"].Style = busyStyle;
+                        if (row.Cells["Status"].Value != null && row.Cells["Status"].Value.ToString() == "Busy")
+                        {
+                            row.Cells["Status"].Style = busyStyle;
+                        }
+                        else
+                        {
+                            row.Cells["Status"].Style = freeStyle;
+                        }
                     }
-                    else
-                    {
-                        row.Cells["Status"].Style = freeStyle;
-                    }
-                }*/
 
-            });
+
+                    //datagrid automechanics
+                    dataAutomechanics.Clear();
+                    foreach (Automechanic automechanic in _simulationCore.getAutomechanicsList())
+                    {
+                        DataRow row = dataAutomechanics.NewRow();
+                        row["Automechanic ID"] = automechanic._id;
+
+
+                        Customer customer = automechanic.customer_car; // assuming this method returns the customer the technician is working on
+                        if (customer != null)
+                        {
+                            row["Customer ID"] = customer._id;
+                            row["Status"] = "Busy";
+                        }
+                        else
+                        {
+                            row["Status"] = "Free";
+                        }
+
+                        dataAutomechanics.Rows.Add(row);
+                    }
+
+
+                    // Bind the DataTable to the DataGridView
+                    dataGridView2.DataSource = dataAutomechanics;
+
+                    // Format the DataGridView
+                    dataGridView2.RowHeadersVisible = true;
+                    dataGridView2.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
+
+                    // Format the "Status" column
+
+                    foreach (DataGridViewRow row in dataGridView2.Rows)
+                    {
+                        if (row.Cells["Status"].Value != null && row.Cells["Status"].Value.ToString() == "Busy")
+                        {
+                            row.Cells["Status"].Style = busyStyle;
+                        }
+                        else
+                        {
+                            row.Cells["Status"].Style = freeStyle;
+                        }
+                    }*/
+
+                });
+            }
         }
 
 
@@ -227,22 +231,12 @@ namespace DISS_SEM2
         private void button2_Click(object sender, EventArgs e)
         {
             _simCore.stop = true;
-            /*if (!_simCore.stop)
-            {
-                thread1.Suspend();
-                _simCore.stop = true;
-            }*/
             
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
             _simCore.stop = false;
-            /*if (_simCore.stop)
-            {
-                thread1.Resume();
-                _simCore.stop = false;
-            }*/
             
         }
 
@@ -274,12 +268,12 @@ namespace DISS_SEM2
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            /*if (thread1 != null && thread1.IsAlive)
+          
+            if (thread1 != null )
             {
-                thread1.Interrupt();
-            }*/
-            
-            base.OnFormClosing(e);
+                thread1.Abort(); // stop the thread
+                thread1 = null; // set the thread to null
+            }
         }
         private bool thread1ShouldExist = false;
 

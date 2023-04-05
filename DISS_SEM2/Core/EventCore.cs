@@ -78,10 +78,9 @@ namespace DISS_SEM2.Core
             {//slow mode
 
                 //pridanie na 9:00
-                this.AddEvent(new ControlEvent(this, 0, null, null, null));
+                //this.AddEvent(new ControlEvent(this, 0, null, null, null));
                 this.AddEvent(new SystemEvent(this, 0, null, null, null));
             }
-
         }
 
         public override void AfterReplication()

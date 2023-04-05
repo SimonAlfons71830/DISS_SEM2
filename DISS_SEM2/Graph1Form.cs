@@ -32,13 +32,17 @@ namespace DISS_SEM2
 
         private void button1_Click(object sender, EventArgs e)
         {
+            this._simulationCore.technicians.Clear();
+            this._simulationCore.automechanics.Clear();
+            this._simulationCore.resetGarage();
 
+            var pom = this._simulationCore.localAverageCustomerCountInLineToTakeOver.getMean();
+
+            this._simulationCore.currentTime = 0;
+            
             time_chart.Series["Dependance"].Points.Clear();
-
             this._simulationCore.resetSim();
 
-            time_chart.Series["Dependance"].Points.Clear();
-            this._simulationCore.resetSim();
             thread1 = new Thread(new ThreadStart(this.startSimulation));
             thread1.IsBackground = true;
             thread1.Start();
@@ -48,24 +52,38 @@ namespace DISS_SEM2
         private void startSimulation()
         {
             this._simulationCore.setSimulationTime(8 * 3600);
+            this._simulationCore.setMode(2);
             for (int i = 1; i <= 15; i++)
             {
                 this._simulationCore.createTechnicians(i);
                 this._simulationCore.createAutomechanics((int)numericUpDown2.Value);
                 this._simulationCore.Simulation((int)numericUpDown1.Value);
                 this.updateChart(i,this._simulationCore.localAverageCustomerCountInLineToTakeOver.getMean());
+
+                this._simulationCore.resetAutomechanics();
+                this._simulationCore.resetTechnicians();
+                this._simulationCore.resetGarage();
+                this._simulationCore.localAverageCustomerCountInLineToTakeOver.resetStatistic();
+
+                var pom = this._simulationCore.localAverageCustomerCountInLineToTakeOver.getMean();
+                //this._simulationCore.resetQueues();
+
+
             }
             
         }
 
         public void updateChart (int numberOfTechnicians, double averageCustomers)
         {
-            this.Invoke((MethodInvoker)delegate
+            if (this.IsHandleCreated)
             {
-                time_chart.Series["Dependance"].Points.AddXY(numberOfTechnicians, averageCustomers);
-                //time_chart.Update();
-                time_chart.Update();
-            });
+                this.Invoke((MethodInvoker)delegate
+                {
+                    time_chart.Series["Dependance"].Points.AddXY(numberOfTechnicians, averageCustomers);
+                    //time_chart.Update();
+                    time_chart.Update();
+                });
+            }
         }
 
         private void time_chart_Click(object sender, EventArgs e)
@@ -79,10 +97,11 @@ namespace DISS_SEM2
         }
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            /*if (thread1 != null && thread1.IsAlive)
+            if (thread1 != null || thread1.IsAlive)
             {
-                thread1.Interrupt();
-            }*/
+                thread1.Abort();
+                thread1 = null;
+            }
 
             base.OnFormClosing(e);
         }

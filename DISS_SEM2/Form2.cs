@@ -18,24 +18,29 @@ namespace DISS_SEM2
 
         public void refresh(STK simulationCore)
         {
-            this.Invoke((MethodInvoker)delegate
+            if (this.IsHandleCreated)
             {
-                label3.Text = this._simCore.getActualReplication().ToString();
 
-                var statI = this._simCore.localAverageCustomerTimeInSTK.getMean() / 60;
-                if (statI == 0)
+
+                this.Invoke((MethodInvoker)delegate
                 {
-                    return;
-                }
-                label9.Text = statI.ToString("0.0000");
-                label10.Text = (this._simCore.localAverageTimeToTakeOverCar.getMean() / 60).ToString("0.0000"); //time to takeover car
-                label12.Text = this._simCore.localAverageCustomerCountInLineToTakeOver.getMean().ToString("0.0000");
-                label20.Text = this._simCore.localAverageFreeTechnicianCount.getMean().ToString("0.0000");
-                label21.Text = this._simCore.localAverageFreeAutomechanicCount.getMean().ToString("0.0000");
-                label17.Text = this._simCore.localAverageCustomerCountInSTK.getMean().ToString("0.0000");
-                label23.Text = this._simCore.localAverageCustomerCountEndOfDay.getMean().ToString("0.0000");
+                    label3.Text = this._simCore.getActualReplication().ToString();
 
-            });
+                    var statI = this._simCore.localAverageCustomerTimeInSTK.getMean() / 60;
+                    if (statI == 0)
+                    {
+                        return;
+                    }
+                    label9.Text = statI.ToString("0.0000");
+                    label10.Text = (this._simCore.localAverageTimeToTakeOverCar.getMean() / 60).ToString("0.0000"); //time to takeover car
+                    label12.Text = this._simCore.localAverageCustomerCountInLineToTakeOver.getMean().ToString("0.0000");
+                    label20.Text = this._simCore.localAverageFreeTechnicianCount.getMean().ToString("0.0000");
+                    label21.Text = this._simCore.localAverageFreeAutomechanicCount.getMean().ToString("0.0000");
+                    label17.Text = this._simCore.localAverageCustomerCountInSTK.getMean().ToString("0.0000");
+                    label23.Text = this._simCore.localAverageCustomerCountEndOfDay.getMean().ToString("0.0000");
+
+                });
+            }
         }
 
         private void Form2_Load(object sender, EventArgs e)
@@ -71,23 +76,26 @@ namespace DISS_SEM2
             _simCore.setSimulationTime(8 * 3600);
             this._simCore.Simulation((int)numericUpDown1.Value);
 
-            this.Invoke((MethodInvoker)delegate
+            if (this.IsHandleCreated)
             {
-                
-                label9.Text = this._simCore.getStatI().ToString("0.0000"); // formatovanie na 4 desatinne cisla
-                label10.Text = this._simCore.getStatII().ToString("0.0000");
-                label12.Text = this._simCore.getStatIII().ToString("0.0000");
-                label20.Text = this._simCore.getStatIV().ToString("0.0000");
-                label21.Text = this._simCore.getStatV().ToString("0.0000");
+                this.Invoke((MethodInvoker)delegate
+                {
 
-                var pom = this._simCore.globalAverageCustomerTimeInSTK.ConfidenceInterval(0.9);
-                label25.Text = "< " + (pom[0]/60).ToString("0.0000") + " - " + (pom[1]/60).ToString("0.0000") + " >";
-                label17.Text = this._simCore.getStatVI().ToString("0.0000");
-                var pom2 = this._simCore.globalAverageCustomerCountInSTK.ConfidenceInterval(0.95);
-                label24.Text = "< " + pom2[0].ToString("0.0000") + " - " + pom2[1].ToString("0.0000") + " >";
+                    label9.Text = this._simCore.getStatI().ToString("0.0000"); // formatovanie na 4 desatinne cisla
+                    label10.Text = this._simCore.getStatII().ToString("0.0000");
+                    label12.Text = this._simCore.getStatIII().ToString("0.0000");
+                    label20.Text = this._simCore.getStatIV().ToString("0.0000");
+                    label21.Text = this._simCore.getStatV().ToString("0.0000");
 
-                label23.Text = this._simCore.getStatVII().ToString("0.0000");
-            });
+                    var pom = this._simCore.globalAverageCustomerTimeInSTK.ConfidenceInterval(0.9);
+                    label25.Text = "< " + (pom[0] / 60).ToString("0.0000") + " - " + (pom[1] / 60).ToString("0.0000") + " >";
+                    label17.Text = this._simCore.getStatVI().ToString("0.0000");
+                    var pom2 = this._simCore.globalAverageCustomerCountInSTK.ConfidenceInterval(0.95);
+                    label24.Text = "< " + pom2[0].ToString("0.0000") + " - " + pom2[1].ToString("0.0000") + " >";
+
+                    label23.Text = this._simCore.getStatVII().ToString("0.0000");
+                });
+            }
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -140,10 +148,10 @@ namespace DISS_SEM2
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            /*if (thread1 != null && thread1.IsAlive)
+            if (thread1 != null || thread1.IsAlive)
             {
                 thread1.Interrupt();
-            }*/
+            }
 
             base.OnFormClosing(e);
         }
