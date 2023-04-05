@@ -242,7 +242,7 @@
             this.numericUpDown1.TabIndex = 29;
             this.numericUpDown1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.numericUpDown1.Value = new decimal(new int[] {
-            1000,
+            100,
             0,
             0,
             0});
@@ -306,6 +306,11 @@
             this.numericUpDown2.Size = new System.Drawing.Size(86, 22);
             this.numericUpDown2.TabIndex = 35;
             this.numericUpDown2.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.numericUpDown2.Value = new decimal(new int[] {
+            4,
+            0,
+            0,
+            0});
             // 
             // numericUpDown3
             // 
@@ -319,6 +324,11 @@
             this.numericUpDown3.Size = new System.Drawing.Size(86, 22);
             this.numericUpDown3.TabIndex = 36;
             this.numericUpDown3.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.numericUpDown3.Value = new decimal(new int[] {
+            16,
+            0,
+            0,
+            0});
             // 
             // label17
             // 
@@ -350,6 +360,11 @@
             this.numericUpDown4.Size = new System.Drawing.Size(92, 22);
             this.numericUpDown4.TabIndex = 39;
             this.numericUpDown4.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.numericUpDown4.Value = new decimal(new int[] {
+            8,
+            0,
+            0,
+            0});
             // 
             // label19
             // 

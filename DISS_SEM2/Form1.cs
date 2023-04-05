@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Drawing;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
 using DISS_SEM2.Core;
@@ -165,12 +166,21 @@ namespace DISS_SEM2
             dataAutomechanics.Columns.Add("Status", typeof(string));
 
 
+            label4.CreateControl(); // create handle for label4
+            label5.CreateControl(); // create handle for label5
+            label7.CreateControl(); // create handle for label7
+            label9.CreateControl(); // create handle for label9
+            label11.CreateControl(); // create handle for label11
+            label13.CreateControl(); // create handle for label13
+            label16.CreateControl(); // create handle for label16
+
         }
 
+        
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (thread1 != null)
+            /*if (thread1 != null)
             {
                 if (this._simCore.stop)
                 {
@@ -179,9 +189,10 @@ namespace DISS_SEM2
                 }
                 thread1.Abort();
                 this.reset();
-            }
-            
+            }*/
 
+            this.reset();
+            
 
             _simCore.SetSpeed((int)numericUpDown1.Value);
 
@@ -215,29 +226,29 @@ namespace DISS_SEM2
 
         private void button2_Click(object sender, EventArgs e)
         {
-            //paused = true;
-            if (!_simCore.stop)
+            _simCore.stop = true;
+            /*if (!_simCore.stop)
             {
                 thread1.Suspend();
                 _simCore.stop = true;
-            }
+            }*/
             
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            
-            if (_simCore.stop)
+            _simCore.stop = false;
+            /*if (_simCore.stop)
             {
                 thread1.Resume();
                 _simCore.stop = false;
-            }
+            }*/
             
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
-            Application.Exit();
+            
         }
 
         private void label22_Click(object sender, EventArgs e)
@@ -260,6 +271,18 @@ namespace DISS_SEM2
             thread1.Abort();
             e.Cancel = true;
         }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            if (thread1!=null)
+            {
+                thread1.Abort();
+            }
+            
+            base.OnFormClosing(e);
+        }
+        private bool thread1ShouldExist = false;
+
 
     }
 }

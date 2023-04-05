@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
@@ -40,6 +40,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.time_chart = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.button2 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.time_chart)).BeginInit();
@@ -139,31 +140,43 @@
             // 
             // time_chart
             // 
-            chartArea1.AxisX.IsStartedFromZero = false;
-            chartArea1.AxisY.IsMarginVisible = false;
-            chartArea1.AxisY.IsStartedFromZero = false;
-            chartArea1.Name = "ChartArea1";
-            this.time_chart.ChartAreas.Add(chartArea1);
-            legend1.Name = "Legend1";
-            this.time_chart.Legends.Add(legend1);
+            chartArea2.AxisX.IsStartedFromZero = false;
+            chartArea2.AxisY.IsMarginVisible = false;
+            chartArea2.AxisY.IsStartedFromZero = false;
+            chartArea2.Name = "ChartArea1";
+            this.time_chart.ChartAreas.Add(chartArea2);
+            legend2.Name = "Legend1";
+            this.time_chart.Legends.Add(legend2);
             this.time_chart.Location = new System.Drawing.Point(15, 207);
             this.time_chart.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.time_chart.Name = "time_chart";
             this.time_chart.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.EarthTones;
-            series1.ChartArea = "ChartArea1";
-            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-            series1.Legend = "Legend1";
-            series1.Name = "Dependance";
-            this.time_chart.Series.Add(series1);
+            series2.ChartArea = "ChartArea1";
+            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series2.Legend = "Legend1";
+            series2.Name = "Dependance";
+            this.time_chart.Series.Add(series2);
             this.time_chart.Size = new System.Drawing.Size(993, 376);
             this.time_chart.TabIndex = 9;
             this.time_chart.Text = "chart1";
+            this.time_chart.Click += new System.EventHandler(this.time_chart_Click);
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(725, 54);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(129, 79);
+            this.button2.TabIndex = 10;
+            this.button2.Text = "STOP";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // Graph1Form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1020, 644);
+            this.Controls.Add(this.button2);
             this.Controls.Add(this.time_chart);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
@@ -194,5 +207,6 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.DataVisualization.Charting.Chart time_chart;
+        private System.Windows.Forms.Button button2;
     }
 }

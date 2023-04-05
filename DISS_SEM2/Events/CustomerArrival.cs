@@ -25,10 +25,7 @@ namespace DISS_SEM2.Events
             // ak je free customerovi naplanuje takeover ak nieje free park miesto davam ho do rady
             // ak NEMAM free technika -> zakaznik ide do rady (prio je arrival time)
 
-            ((STK)core).localAverageCustomerCountInSTK.addValues(((STK)core).customerscount, core.currentTime - ((STK)core).localAverageCustomerCountInSTK.timeOfLastChange);
-            ((STK)core).localAverageCustomerCountInSTK.setFinalTimeOfLastChange(core.currentTime);
-
-            
+            ((STK)core).localAverageCustomerCountInSTK.addValues(((STK)core).customerscount);
 
             ((STK)core).customerscount++;
             

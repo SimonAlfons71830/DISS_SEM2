@@ -5,7 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DISS_SEM2.Core
@@ -97,7 +99,6 @@ namespace DISS_SEM2.Core
                 ((STK)this).localAverageCustomerCountInLineToTakeOver.setFinalTimeOfLastChange(this.maxTime);
                 ((STK)this).localAverageFreeTechnicianCount.setFinalTimeOfLastChange(this.maxTime);
                 ((STK)this).localAverageFreeAutomechanicCount.setFinalTimeOfLastChange(this.maxTime);
-                ((STK)this).localAverageCustomerCountInSTK.setFinalTimeOfLastChange(this.maxTime);
 
                 ((STK)this).localAverageCustomerCountEndOfDay.addValues(((STK)this).customerscount);
 
@@ -144,6 +145,10 @@ namespace DISS_SEM2.Core
                 this.currentTime = _event.time; //getter
                 if (((STK)this).getMode() == 1)
                 { //slow mode
+                    while (this.stop)
+                    {
+                        Thread.Sleep(1000);
+                    }
                     ((STK)this).Notify();
                 }
                 //osetrenie casu -> uz sa dalsi event nevykona

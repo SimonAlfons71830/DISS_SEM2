@@ -60,7 +60,7 @@ namespace DISS_SEM2.Core
         public WeightedStatistics localAverageCustomerCountInLineToTakeOver;
         public WeightedStatistics localAverageFreeTechnicianCount;
         public WeightedStatistics localAverageFreeAutomechanicCount;
-        public WeightedStatistics localAverageCustomerCountInSTK;
+        public Statistics localAverageCustomerCountInSTK;
         public Statistics localAverageCustomerCountEndOfDay;
 
         public Statistics globalAverageCustomerTimeInSTK;
@@ -75,7 +75,7 @@ namespace DISS_SEM2.Core
         {
             customerscount = 0;
 
-            localAverageCustomerCountInSTK = new WeightedStatistics();
+            localAverageCustomerCountInSTK = new Statistics();
             localAverageCustomerTimeInSTK = new Statistics();
             localAverageTimeToTakeOverCar = new Statistics();
             localAverageCustomerCountInLineToTakeOver = new WeightedStatistics();
@@ -627,6 +627,16 @@ namespace DISS_SEM2.Core
             {
                 this.automechanics[i].obsluhuje = false;
             }
+        }
+
+        public void resetSim()
+        {
+            this.replications = 0;
+            this.resetGarage();
+            this.resetTechnicians();
+            this.resetAutomechanics();
+            this.resetQueues();
+            this.localAverageCustomerCountInSTK.resetStatistic();
         }
 
         public void resetQueues()

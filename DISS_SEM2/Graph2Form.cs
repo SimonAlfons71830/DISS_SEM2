@@ -24,7 +24,8 @@ namespace DISS_SEM2
 
         private void Graph2Form_Load(object sender, EventArgs e)
         {
-
+            time_chart.Series["Dependance"].BorderWidth = 3;
+            time_chart.DataBind();
         }
 
         
@@ -46,19 +47,21 @@ namespace DISS_SEM2
         {
             this.Invoke((MethodInvoker)delegate
             {
-                chart1.Series["Dependence"].Points.AddXY(numberOfAutomechanics, averageTime);
+                time_chart.Series["Dependance"].Points.AddXY(numberOfAutomechanics, averageTime);
                 //time_chart.Update();
-                chart1.Update();
+                time_chart.Update();
             });
         }
 
         private void button1_Click_1(object sender, EventArgs e)
         {
+            time_chart.Series["Dependance"].Points.Clear();
+            this._simulationCore.resetSim();
+
             thread1 = new Thread(new ThreadStart(this.startSimulation));
             thread1.IsBackground = true;
             thread1.Start();
         }
 
-       
     }
 }

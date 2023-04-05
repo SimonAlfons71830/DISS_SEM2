@@ -43,10 +43,10 @@ namespace DISS_SEM2.Core
             
             for (int i = 0; i < _numberOfReplications; i++) //input z textbox
             {
-                while (stop)
+                if (stop)
                 {
                     ((STK)this).sleepSim();
-                    break;
+                    break; // vysledne globalne statistiky
                 }
                 this.BeforeReplication();
                 this.Replication();

@@ -40,12 +40,13 @@ namespace DISS_SEM2
 
         private void Form2_Load(object sender, EventArgs e)
         {
-            this._simCore.addObserver(this);
-            _simCore.setSimulationTime(8*3600);
+            
+            
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
+            this.reset();
 
             _simCore.createAutomechanics((int)numericUpDown3.Value);
             _simCore.createTechnicians((int)numericUpDown2.Value);
@@ -64,8 +65,10 @@ namespace DISS_SEM2
 
         private void startSimulation()
         {
+            
 
-
+            this._simCore.addObserver(this);
+            _simCore.setSimulationTime(8 * 3600);
             this._simCore.Simulation((int)numericUpDown1.Value);
 
             this.Invoke((MethodInvoker)delegate
@@ -123,10 +126,17 @@ namespace DISS_SEM2
 
         private void reset()
         {
+            this._simCore.replications = 0;
             this._simCore.resetGarage();
             this._simCore.resetAutomechanics();
             this._simCore.resetTechnicians();
             this._simCore.resetQueues();
         }
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            thread1.Abort();
+            e.Cancel = true;
+        }
+
     }
 }

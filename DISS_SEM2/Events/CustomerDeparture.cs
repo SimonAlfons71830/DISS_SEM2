@@ -103,8 +103,7 @@ namespace DISS_SEM2.Events
             }
 
 
-            ((STK)core).localAverageCustomerCountInSTK.addValues(((STK)core).customerscount, core.currentTime - ((STK)core).localAverageCustomerCountInSTK.timeOfLastChange);
-            ((STK)core).localAverageCustomerCountInSTK.setFinalTimeOfLastChange(core.currentTime);
+            ((STK)core).localAverageCustomerCountInSTK.addValues(((STK)core).customerscount);
 
             ((STK)core).customerscount--;
             
