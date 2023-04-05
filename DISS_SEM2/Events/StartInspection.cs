@@ -43,18 +43,14 @@ namespace DISS_SEM2.Events
 
 
             //uvolni sa miesto v garazi tak mozem automaticky vyvolat novy takeover ak nikto necaka v rade na platenie
-            if (((STK)core).getAvailableTechnicianCount() > 0)
-            {
-                var _timeTechnic = core.currentTime - ((STK)core).localAverageFreeTechnicianCount.timeOfLastChange;
-                ((STK)core).localAverageFreeTechnicianCount.addValues(((STK)core).getAvailableTechnicianCount(), _timeTechnic);
-                ((STK)core).localAverageFreeTechnicianCount.setFinalTimeOfLastChange(core.currentTime);
-            }
+            
 
             //ak je volny technik tak nikto necaka na platbu
             var technic = ((STK)core).getAvailableTechnician();
             if (technic != null)
             {
 
+                
                 /*if (((STK)core).getCustomersCountInPaymentLine() > 0)
                 {
                     //payment
@@ -64,7 +60,8 @@ namespace DISS_SEM2.Events
                     core.AddEvent(newPayment);
                     ((STK)core).removeCustomerFromPaymentLine();
                 }
-                else*/ if (((STK)core).getCustomersCountInLine() > 0) 
+                else*/
+                if (((STK)core).getCustomersCountInLine() > 0) 
                 {
                     if (((STK)core).reserveParking())
                     {
@@ -79,7 +76,11 @@ namespace DISS_SEM2.Events
                         ((STK)core).localAverageTimeToTakeOverCar.addValues(_takeovertimestat);
                         var newTakeOver = new StartTakeOver(core, takeoverTime, takeoverCustomer, technic, null);
 
+                        var _timeTechnic = core.currentTime - ((STK)core).localAverageFreeTechnicianCount.timeOfLastChange;
+                        ((STK)core).localAverageFreeTechnicianCount.addValues(((STK)core).getAvailableTechnicianCount(), _timeTechnic);
+                        ((STK)core).localAverageFreeTechnicianCount.setFinalTimeOfLastChange(core.currentTime);
 
+                        technic.obsluhuje = true;
                         core.AddEvent(newTakeOver);
 
                         //stat

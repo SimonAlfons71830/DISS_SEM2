@@ -55,20 +55,19 @@ namespace DISS_SEM2.Events
             //free technic potom
             //ci je v rade na payment niekto a potom
             //ci je volne miesto na park
-            if (((STK)core).getAvailableTechnicianCount() > 0)
+            /*if (((STK)core).getAvailableTechnicianCount() > 0)
             {
                 var _timeTechnic = core.currentTime - ((STK)core).localAverageFreeTechnicianCount.timeOfLastChange;
                 ((STK)core).localAverageFreeTechnicianCount.addValues(((STK)core).getAvailableTechnicianCount(), _timeTechnic);
                 ((STK)core).localAverageFreeTechnicianCount.setFinalTimeOfLastChange(core.currentTime);
-            }
+            }*/
 
 
             var technic = ((STK)core).getAvailableTechnician(); //bude volny 
 
             if (technic != null)
             {
-
-                if (((STK)core).getCustomersCountInPaymentLine() > 0)
+                /*if (((STK)core).getCustomersCountInPaymentLine() > 0)
                 {
 
                     //payment
@@ -79,7 +78,7 @@ namespace DISS_SEM2.Events
                     core.AddEvent(newPayment);
                     ((STK)core).removeCustomerFromPaymentLine();
                 }
-                else
+                else*/
                 {
                     if (((STK)core).getCustomersCountInLine() > 0)
                     {
@@ -87,6 +86,11 @@ namespace DISS_SEM2.Events
                         {
                             var takeoverTime = ((STK)core).takeOverTimeGenerator.Next() + time;
                             var takeoverCustomer = ((STK)core).getCustomerInLine();
+
+                            var _timeTechnic = core.currentTime - ((STK)core).localAverageFreeTechnicianCount.timeOfLastChange;
+                            ((STK)core).localAverageFreeTechnicianCount.addValues(((STK)core).getAvailableTechnicianCount(), _timeTechnic);
+                            ((STK)core).localAverageFreeTechnicianCount.setFinalTimeOfLastChange(core.currentTime);
+
                             technic.obsluhuje = true;
                             technic.customer_car = takeoverCustomer;
 

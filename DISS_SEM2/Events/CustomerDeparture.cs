@@ -35,26 +35,33 @@ namespace DISS_SEM2.Events
 
             technician.customer_car = null;
 
-            if (((STK)core).getAvailableTechnicianCount() > 0)
+            /*if (((STK)core).getAvailableTechnicianCount() > 0)
             {
                 //predtym ako ho vyberiem
                 var _timeTechnic = core.currentTime - ((STK)core).localAverageFreeTechnicianCount.timeOfLastChange;
                 ((STK)core).localAverageFreeTechnicianCount.addValues(((STK)core).getAvailableTechnicianCount(), _timeTechnic);
                 ((STK)core).localAverageFreeTechnicianCount.setFinalTimeOfLastChange(core.currentTime);
-            }
+            }*/
 
 
             var technic = ((STK)core).getAvailableTechnician();
 
             if (technic != null) 
             {
+                
 
                 if (((STK)core).getCustomersCountInPaymentLine() > 0) 
                 {
                     //platba
                     var paymentTime = ((STK)core).paymentTimeGenerator.Next() + time;
                     var paymentCustomer = ((STK)core).getCustomerInPaymentLine();
+
+                    var _timeTechnic = core.currentTime - ((STK)core).localAverageFreeTechnicianCount.timeOfLastChange;
+                    ((STK)core).localAverageFreeTechnicianCount.addValues(((STK)core).getAvailableTechnicianCount(), _timeTechnic);
+                    ((STK)core).localAverageFreeTechnicianCount.setFinalTimeOfLastChange(core.currentTime);
+
                     technic.obsluhuje = true;
+
                     var newPayment = new Payment(core, paymentTime, paymentCustomer, technic, null);
                     core.AddEvent(newPayment);
                     ((STK)core).removeCustomerFromPaymentLine();
@@ -67,6 +74,10 @@ namespace DISS_SEM2.Events
                         {
                             var takeoverTime = ((STK)core).takeOverTimeGenerator.Next() + time;
                             var takeoverCustomer = ((STK)core).getCustomerInLine();
+
+                            var _timeTechnic = core.currentTime - ((STK)core).localAverageFreeTechnicianCount.timeOfLastChange;
+                            ((STK)core).localAverageFreeTechnicianCount.addValues(((STK)core).getAvailableTechnicianCount(), _timeTechnic);
+                            ((STK)core).localAverageFreeTechnicianCount.setFinalTimeOfLastChange(core.currentTime);
 
                             technic.obsluhuje = true;
                             technic.customer_car = takeoverCustomer;

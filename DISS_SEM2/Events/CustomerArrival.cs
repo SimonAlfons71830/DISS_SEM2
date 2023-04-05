@@ -43,20 +43,15 @@ namespace DISS_SEM2.Events
                 core.AddEvent(nextArrival);
             }
 
-            if (((STK)core).getAvailableTechnicianCount() > 0)
-            {
-                var _timeTechnic = core.currentTime - ((STK)core).localAverageFreeTechnicianCount.timeOfLastChange;
-                ((STK)core).localAverageFreeTechnicianCount.addValues(((STK)core).getAvailableTechnicianCount(), _timeTechnic);
-                ((STK)core).localAverageFreeTechnicianCount.setFinalTimeOfLastChange(core.currentTime);
-            }
+            
 
             var technic = ((STK)core).getAvailableTechnician();
             // bud je to technic ktory neobsluhuje alebo null
 
             if (technic != null)
             {
-
-/*
+                
+                /*
                 if (((STK)core).getCustomersCountInPaymentLine() > 0)
                 {
                     //tato situacia by nemala nikdy nastat
@@ -71,6 +66,11 @@ namespace DISS_SEM2.Events
                 {
                     if (((STK)core).reserveParking())
                     {
+                        var _timeTechnic = core.currentTime - ((STK)core).localAverageFreeTechnicianCount.timeOfLastChange;
+                        ((STK)core).localAverageFreeTechnicianCount.addValues(((STK)core).getAvailableTechnicianCount(), _timeTechnic);
+                        ((STK)core).localAverageFreeTechnicianCount.setFinalTimeOfLastChange(core.currentTime);
+
+
                         var takeoverTime = ((STK)core).takeOverTimeGenerator.Next() + time;
                         technic.obsluhuje = true;
                         technic.customer_car = customer;

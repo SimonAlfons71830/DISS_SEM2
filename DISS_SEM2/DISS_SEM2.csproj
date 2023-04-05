@@ -73,7 +73,6 @@
     <Compile Include="Graph2Form.Designer.cs">
       <DependentUpon>Graph2Form.cs</DependentUpon>
     </Compile>
-    <Compile Include="Intervals.cs" />
     <Compile Include="ISTKObserver.cs" />
     <Compile Include="Objects\Cars\CarTypes.cs" />
     <Compile Include="Objects\ParkingSpace.cs" />

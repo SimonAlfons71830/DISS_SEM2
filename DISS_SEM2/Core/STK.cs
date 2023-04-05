@@ -71,10 +71,6 @@ namespace DISS_SEM2.Core
         public Statistics globalAverageCustomerCountEndOfDay;
         public Statistics globalAverageCustomerCountInSTK;
 
-
-        public Intervals avgCustomerTime;
-        public Intervals avgCustomerCount;
-
         public STK()
         {
             customerscount = 0;

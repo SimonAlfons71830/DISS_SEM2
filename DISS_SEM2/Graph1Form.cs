@@ -53,11 +53,11 @@ namespace DISS_SEM2
         {
             this.Invoke((MethodInvoker)delegate
             {
-                chart1.Series["Dependance"].Points.AddXY(numberOfTechnicians, averageCustomers);
+                time_chart.Series["Dependance"].Points.AddXY(numberOfTechnicians, averageCustomers);
                 //time_chart.Update();
-                chart1.Update();
+                time_chart.Update();
             });
         }
-        
+
     }
 }

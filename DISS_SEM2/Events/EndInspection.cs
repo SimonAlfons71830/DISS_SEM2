@@ -25,21 +25,24 @@ namespace DISS_SEM2.Events
 
             //viem ze sa niekto zaradil do radu na platenie, mozem dat robotu technikovi
             //stat musim robit predtym ako ho vyberiem z listu
-            if (((STK)core).getAvailableTechnicianCount() >0)
-            {
-                var _timeTechnic = core.currentTime - ((STK)core).localAverageFreeTechnicianCount.timeOfLastChange;
-                ((STK)core).localAverageFreeTechnicianCount.addValues(((STK)core).getAvailableTechnicianCount(), _timeTechnic);
-                ((STK)core).localAverageFreeTechnicianCount.setFinalTimeOfLastChange(core.currentTime);
-            }
+            
 
 
             var technic = ((STK)core).getAvailableTechnician();
             if (technic != null) 
             {
+                var _timeTechnic = core.currentTime - ((STK)core).localAverageFreeTechnicianCount.timeOfLastChange;
+                ((STK)core).localAverageFreeTechnicianCount.addValues(((STK)core).getAvailableTechnicianCount(), _timeTechnic);
+                ((STK)core).localAverageFreeTechnicianCount.setFinalTimeOfLastChange(core.currentTime);
+
                 //payment
                 var paymentTime = ((STK)core).paymentTimeGenerator.Next() + time;
                 var payingCustomer = ((STK)core).getCustomerInPaymentLine();
                 var newPayment = new Payment(core, paymentTime, payingCustomer, technic,null);
+                
+                technic.obsluhuje = true;
+                //!!!!!
+
                 core.AddEvent(newPayment);
                 ((STK)core).removeCustomerFromPaymentLine();
             }
