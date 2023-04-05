@@ -46,7 +46,7 @@ namespace DISS_SEM2
         {
             this.Invoke((MethodInvoker)delegate
             {
-                chart1.Series["Series1"].Points.AddXY(numberOfAutomechanics, averageTime);
+                chart1.Series["Dependence"].Points.AddXY(numberOfAutomechanics, averageTime);
                 //time_chart.Update();
                 chart1.Update();
             });

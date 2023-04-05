@@ -28,7 +28,7 @@ namespace DISS_SEM2.Events
             ((STK)core).localAverageCustomerCountInSTK.addValues(((STK)core).customerscount, core.currentTime - ((STK)core).localAverageCustomerCountInSTK.timeOfLastChange);
             ((STK)core).localAverageCustomerCountInSTK.setFinalTimeOfLastChange(core.currentTime);
 
-            ((STK)core).powerOfCustomerCountInSTK.Add(((STK)core).customerscount);
+            
 
             ((STK)core).customerscount++;
             
@@ -56,7 +56,7 @@ namespace DISS_SEM2.Events
             if (technic != null)
             {
 
-
+/*
                 if (((STK)core).getCustomersCountInPaymentLine() > 0)
                 {
                     //tato situacia by nemala nikdy nastat
@@ -67,7 +67,7 @@ namespace DISS_SEM2.Events
                     var nextPayment = new Payment(core, paymentTime, paymentCustomer, technic, null);
                     core.AddEvent(nextPayment);
                 }
-                else
+                else*/
                 {
                     if (((STK)core).reserveParking())
                     {

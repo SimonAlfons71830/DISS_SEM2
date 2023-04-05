@@ -71,13 +71,12 @@ namespace DISS_SEM2.Core
         public Statistics globalAverageCustomerCountEndOfDay;
         public Statistics globalAverageCustomerCountInSTK;
 
-        public List<double> powerOfCustomerTimeInSTK;
-        public List<double> powerOfCustomerCountInSTK;
+
+        public Intervals avgCustomerTime;
+        public Intervals avgCustomerCount;
 
         public STK()
         {
-            powerOfCustomerTimeInSTK = new List<double>();
-            powerOfCustomerCountInSTK = new List<double>();
             customerscount = 0;
 
             localAverageCustomerCountInSTK = new WeightedStatistics();
@@ -596,36 +595,6 @@ namespace DISS_SEM2.Core
             return this.replications;
         }
 
-
-        public double[] ConfidenceInterval(List<double> squaredValues, double probability)
-        {
-            double mean = squaredValues.Average();
-            double standardDeviation = Math.Sqrt(squaredValues.Average(v => Math.Pow(v - mean, 2)));
-            double zScore = GetZScore(probability);
-
-            double marginOfError = zScore * standardDeviation / Math.Sqrt(squaredValues.Count);
-            double lowerLimit = mean - marginOfError;
-            double upperLimit = mean + marginOfError;
-
-            return new double[] { lowerLimit, upperLimit };
-        }
-
-        private double GetZScore(double probability)
-        {
-            double zScore = 0.0;
-
-            if (probability == 0.9)
-                zScore = 1.645;
-            else if (probability == 0.95)
-                zScore = 1.96;
-            else if (probability == 0.99)
-                zScore = 2.576;
-            else
-                throw new ArgumentException("Invalid probability value. Supported values are 0.9, 0.95 and 0.99.");
-
-            return zScore;
-        }
-
         /// <summary>
         /// pocet zakaznikov v stk
         /// </summary>
@@ -685,8 +654,6 @@ namespace DISS_SEM2.Core
                 //this.powerOfCustomerCountInSTK.Add(this.customersLineQ.Count);
                 var customer = this.customersLineQ.Dequeue();
                 this.localAverageCustomerTimeInSTK.addValues(this.currentTime - customer.arrivalTime);
-                
-                this.powerOfCustomerTimeInSTK.Add(this.currentTime - customer.arrivalTime);
             }
         }
 

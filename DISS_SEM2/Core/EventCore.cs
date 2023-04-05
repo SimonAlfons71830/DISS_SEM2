@@ -31,8 +31,6 @@ namespace DISS_SEM2.Core
                 ((STK)this).globalAverageFreeAutomechanicCount.resetStatistic();
                 ((STK)this).globalAverageCustomerCountEndOfDay.resetStatistic();
                 ((STK)this).globalAverageCustomerCountEndOfDay.resetStatistic();
-                ((STK)this).powerOfCustomerCountInSTK.Clear();
-                ((STK)this).powerOfCustomerTimeInSTK.Clear();
             }
             
         }
@@ -51,8 +49,7 @@ namespace DISS_SEM2.Core
                 ((STK)this).resetAutomechanics();
                 ((STK)this).customerscount = 0;
                 ((STK)this).currentTime = 0;
-                ((STK)this).powerOfCustomerCountInSTK.Clear();
-                ((STK)this).powerOfCustomerTimeInSTK.Clear();
+
                 ((STK)this)._ids = 0;
                 ((STK)this).CarsCountGarage = 0;
                 //((STK)this).resetQueues();

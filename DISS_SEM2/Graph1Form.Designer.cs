@@ -54,10 +54,11 @@
             this.chart1.Legends.Add(legend1);
             this.chart1.Location = new System.Drawing.Point(39, 175);
             this.chart1.Name = "chart1";
+            this.chart1.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Fire;
             series1.ChartArea = "ChartArea1";
             series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
             series1.Legend = "Legend1";
-            series1.Name = "Series1";
+            series1.Name = "Dependance";
             this.chart1.Series.Add(series1);
             this.chart1.Size = new System.Drawing.Size(952, 444);
             this.chart1.TabIndex = 0;
@@ -81,7 +82,7 @@
             this.numericUpDown1.TabIndex = 1;
             this.numericUpDown1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.numericUpDown1.Value = new decimal(new int[] {
-            10000,
+            100,
             0,
             0,
             0});
@@ -94,7 +95,7 @@
             this.numericUpDown2.TabIndex = 2;
             this.numericUpDown2.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.numericUpDown2.Value = new decimal(new int[] {
-            1,
+            17,
             0,
             0,
             0});
@@ -136,7 +137,6 @@
             this.label3.TabIndex = 6;
             this.label3.Text = "Dependance of the average number of customers in line to take over the car to the" +
     " number of technicians.";
-            this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
             // label4
             // 

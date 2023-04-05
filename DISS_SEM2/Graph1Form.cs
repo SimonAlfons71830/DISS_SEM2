@@ -36,7 +36,6 @@ namespace DISS_SEM2
 
         }
 
-
         private void startSimulation()
         {
             this._simulationCore.setSimulationTime(8 * 3600);
@@ -49,15 +48,12 @@ namespace DISS_SEM2
             }
             
         }
-        private void label3_Click(object sender, EventArgs e)
-        {
 
-        }
         public void updateChart (int numberOfTechnicians, double averageCustomers)
         {
             this.Invoke((MethodInvoker)delegate
             {
-                chart1.Series["Series1"].Points.AddXY(numberOfTechnicians, averageCustomers);
+                chart1.Series["Dependance"].Points.AddXY(numberOfTechnicians, averageCustomers);
                 //time_chart.Update();
                 chart1.Update();
             });

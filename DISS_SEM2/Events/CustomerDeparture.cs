@@ -19,7 +19,6 @@ namespace DISS_SEM2.Events
             var pom = time - customer.arrivalTime; 
             
             ((STK)core).localAverageCustomerTimeInSTK.addValues(time - customer.arrivalTime);
-            ((STK)core).powerOfCustomerTimeInSTK.Add(pom);
             //uvolni technika
             //naplanuje novu platbu
             //ak nikto nieje v rade tak naplanuje start takeovber
@@ -95,7 +94,6 @@ namespace DISS_SEM2.Events
 
             ((STK)core).localAverageCustomerCountInSTK.addValues(((STK)core).customerscount, core.currentTime - ((STK)core).localAverageCustomerCountInSTK.timeOfLastChange);
             ((STK)core).localAverageCustomerCountInSTK.setFinalTimeOfLastChange(core.currentTime);
-            ((STK)core).powerOfCustomerCountInSTK.Add(((STK)core).customerscount);
 
             ((STK)core).customerscount--;
             

@@ -47,5 +47,6 @@ namespace DISS_SEM2
         /*var cakanie = core.currentTime - (STK).timeOfLastChange;
         STK.statisticsChange.addValues(cakanie * STK.waitingLine());
         STK.timeOfLastChange = core.currentTime;*/
+
     }
 }

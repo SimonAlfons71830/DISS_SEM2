@@ -58,7 +58,7 @@
             series1.ChartArea = "ChartArea1";
             series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
             series1.Legend = "Legend1";
-            series1.Name = "Series1";
+            series1.Name = "Dependence";
             this.chart1.Series.Add(series1);
             this.chart1.Size = new System.Drawing.Size(952, 444);
             this.chart1.TabIndex = 1;
@@ -110,7 +110,7 @@
             this.numericUpDown2.TabIndex = 8;
             this.numericUpDown2.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.numericUpDown2.Value = new decimal(new int[] {
-            1,
+            4,
             0,
             0,
             0});
@@ -133,7 +133,7 @@
             this.numericUpDown1.TabIndex = 7;
             this.numericUpDown1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.numericUpDown1.Value = new decimal(new int[] {
-            10000,
+            100,
             0,
             0,
             0});

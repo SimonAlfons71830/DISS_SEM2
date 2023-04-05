@@ -76,11 +76,13 @@ namespace DISS_SEM2
                 label12.Text = this._simCore.getStatIII().ToString("0.0000");
                 label20.Text = this._simCore.getStatIV().ToString("0.0000");
                 label21.Text = this._simCore.getStatV().ToString("0.0000");
-                var pom = this._simCore.ConfidenceInterval(this._simCore.powerOfCustomerTimeInSTK, 0.9);
-                label25.Text = "< " + (pom[0] / 60).ToString("0.0000") + " - " + (pom[1] / 60).ToString("0.0000") + " >";
+
+                var pom = this._simCore.globalAverageCustomerTimeInSTK.ConfidenceInterval(0.9);
+                label25.Text = "< " + (pom[0]/60).ToString("0.0000") + " - " + (pom[1]/60).ToString("0.0000") + " >";
                 label17.Text = this._simCore.getStatVI().ToString("0.0000");
-                var pom2 = this._simCore.ConfidenceInterval(this._simCore.powerOfCustomerCountInSTK, 0.95);
+                var pom2 = this._simCore.globalAverageCustomerCountInSTK.ConfidenceInterval(0.95);
                 label24.Text = "< " + pom2[0].ToString("0.0000") + " - " + pom2[1].ToString("0.0000") + " >";
+
                 label23.Text = this._simCore.getStatVII().ToString("0.0000");
             });
         }
@@ -95,11 +97,13 @@ namespace DISS_SEM2
                 label12.Text = this._simCore.getStatIII().ToString("0.0000");
                 label20.Text = this._simCore.getStatIV().ToString("0.0000");
                 label21.Text = this._simCore.getStatV().ToString("0.0000");
-                var pom = this._simCore.ConfidenceInterval(this._simCore.powerOfCustomerTimeInSTK, 0.9);
+                //confidence intervals
+                var pom = this._simCore.globalAverageCustomerTimeInSTK.ConfidenceInterval(0.9);
                 label25.Text = "< " + (pom[0] / 60).ToString("0.0000") + " - " + (pom[1] / 60).ToString("0.0000") + " >";
                 label17.Text = this._simCore.getStatVI().ToString("0.0000");
-                var pom2 = this._simCore.ConfidenceInterval(this._simCore.powerOfCustomerCountInSTK, 0.95);
+                var pom2 = this._simCore.globalAverageCustomerCountInSTK.ConfidenceInterval(0.95);
                 label24.Text = "< " + pom2[0].ToString("0.0000") + " - " + pom2[1].ToString("0.0000") + " >";
+                //stat of customer count at the end of the day
                 label23.Text = this._simCore.getStatVII().ToString("0.0000");
             });
 

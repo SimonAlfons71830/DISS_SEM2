@@ -97,6 +97,11 @@
             this.numericUpDown1.Size = new System.Drawing.Size(120, 22);
             this.numericUpDown1.TabIndex = 1;
             this.numericUpDown1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.numericUpDown1.Value = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
             // 
             // numericUpDown2
             // 
@@ -105,6 +110,11 @@
             this.numericUpDown2.Size = new System.Drawing.Size(99, 22);
             this.numericUpDown2.TabIndex = 2;
             this.numericUpDown2.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.numericUpDown2.Value = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
             // 
             // numericUpDown3
             // 
@@ -113,6 +123,11 @@
             this.numericUpDown3.Size = new System.Drawing.Size(99, 22);
             this.numericUpDown3.TabIndex = 3;
             this.numericUpDown3.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.numericUpDown3.Value = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
             // 
             // label2
             // 
@@ -329,7 +344,7 @@
             this.label16.AutoSize = true;
             this.label16.Location = new System.Drawing.Point(23, 352);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(243, 20);
+            this.label16.Size = new System.Drawing.Size(194, 16);
             this.label16.TabIndex = 31;
             this.label16.Text = "Average customer count in STK";
             // 
