@@ -61,7 +61,7 @@ namespace DISS_SEM2.Core
         public WeightedStatistics localAverageCustomerCountInLineToTakeOver;
         public WeightedStatistics localAverageFreeTechnicianCount;
         public WeightedStatistics localAverageFreeAutomechanicCount;
-        public Statistics localAverageCustomerCountInSTK;
+        public WeightedStatistics localAverageCustomerCountInSTK;
         public Statistics localAverageCustomerCountEndOfDay;
 
         public Statistics globalAverageCustomerTimeInSTK;
@@ -77,7 +77,7 @@ namespace DISS_SEM2.Core
             customerscount = 0;
             todaysCustomers = 0;
 
-            localAverageCustomerCountInSTK = new Statistics();
+            localAverageCustomerCountInSTK = new WeightedStatistics();
             localAverageCustomerTimeInSTK = new Statistics();
             localAverageTimeToTakeOverCar = new Statistics();
             localAverageCustomerCountInLineToTakeOver = new WeightedStatistics();

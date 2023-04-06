@@ -38,12 +38,8 @@ namespace DISS_SEM2.Core
             
         }
 
-        public override void After() 
+        public override void After()
         {
-            if (replications != ((STK)this).globalAverageCustomerTimeInSTK.count)
-            {
-                return;
-            }
         }
 
         public override void BeforeReplication()
@@ -98,31 +94,24 @@ namespace DISS_SEM2.Core
                 this.currentTime = maxTime;
                 ((STK)this).endCustomersWaiting();
                 var pomcustom = ((STK)this).todaysCustomers;
-                if (pomcustom != ((STK)this).localAverageCustomerTimeInSTK.count) 
-                {
-                    var pompom = ((STK)this).todaysCustomers - ((STK)this).customerscount; //celkovy - ti co nevysli zo systemu
-                    return;
-                }
+                
                 var meanofstatI = ((STK)this).localAverageCustomerTimeInSTK.getMean(); //1
-                if (meanofstatI == -1)
-                {
-                    return; //?????
-                }
+                ((STK)this).globalAverageCustomerTimeInSTK.addValues(meanofstatI);//1
 
                 ((STK)this).localAverageCustomerCountInLineToTakeOver.setFinalTimeOfLastChange(this.maxTime);
                 ((STK)this).localAverageFreeTechnicianCount.setFinalTimeOfLastChange(this.maxTime);
                 ((STK)this).localAverageFreeAutomechanicCount.setFinalTimeOfLastChange(this.maxTime);
-
+                ((STK)this).localAverageCustomerCountInSTK.setFinalTimeOfLastChange(this.maxTime);
 
                 var pomC = ((STK)this).customerscount;
                 ((STK)this).localAverageCustomerCountEndOfDay.addValues(((STK)this).customerscount);
 
-                ((STK)this).endCustomersWaiting();
+                //((STK)this).endCustomersWaiting();
 
 
                 
 
-                ((STK)this).globalAverageCustomerTimeInSTK.addValues(meanofstatI);//1
+                
 
                 ((STK)this).globalAverageTimeToTakeOverCar.addValues(((STK)this).localAverageTimeToTakeOverCar.getMean());
                 ((STK)this).globalAverageCustomerCountInLineToTakeOver.addValues(((STK)this).localAverageCustomerCountInLineToTakeOver.getMean());
@@ -169,7 +158,10 @@ namespace DISS_SEM2.Core
                     ((STK)this).Notify();
                 }
                 //osetrenie casu -> uz sa dalsi event nevykona
-                if (this.currentTime > this.maxTime) { break; }
+                if (this.currentTime > this.maxTime)
+                { 
+                    break; 
+                }
                 _event.execute();
             }
             var pomCust = ((STK)this).customerscount;

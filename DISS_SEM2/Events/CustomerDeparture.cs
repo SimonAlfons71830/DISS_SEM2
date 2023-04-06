@@ -35,14 +35,6 @@ namespace DISS_SEM2.Events
             technician.customer_car = null;
             //pridali sme ho do volnych 
 
-            /*if (((STK)core).getAvailableTechnicianCount() > 0)
-            {
-                //predtym ako ho vyberiem
-                var _timeTechnic = core.currentTime - ((STK)core).localAverageFreeTechnicianCount.timeOfLastChange;
-                ((STK)core).localAverageFreeTechnicianCount.addValues(((STK)core).getAvailableTechnicianCount(), _timeTechnic);
-                ((STK)core).localAverageFreeTechnicianCount.setFinalTimeOfLastChange(core.currentTime);
-            }*/
-
 
             var technic = ((STK)core).getAvailableTechnician();
 
@@ -103,8 +95,10 @@ namespace DISS_SEM2.Events
                 }
             }
 
-
-            ((STK)core).localAverageCustomerCountInSTK.addValues(((STK)core).customerscount);
+            var _timeCust = core.currentTime - ((STK)core).localAverageCustomerCountInSTK.timeOfLastChange;
+            ((STK)core).localAverageCustomerCountInSTK.addValues(((STK)core).customerscount, _timeCust);
+            ((STK)core).localAverageCustomerCountInSTK.timeOfLastChange = core.currentTime;
+            /*((STK)core).localAverageCustomerCountInSTK.addValues(((STK)core).customerscount);*/
 
             ((STK)core).customerscount--;
             //var pomC = ((STK)core).customerscount;

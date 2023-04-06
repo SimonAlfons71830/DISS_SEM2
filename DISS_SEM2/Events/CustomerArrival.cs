@@ -25,15 +25,17 @@ namespace DISS_SEM2.Events
             //ak nieje nikto v payment line tak kontrolujem dostupne parkovacie miesto
             // ak je free customerovi naplanuje takeover ak nieje free park miesto davam ho do rady
             // ak NEMAM free technika -> zakaznik ide do rady (prio je arrival time)
-
-            ((STK)core).localAverageCustomerCountInSTK.addValues(((STK)core).customerscount);
+            var _timeCust = core.currentTime - ((STK)core).localAverageCustomerCountInSTK.timeOfLastChange;
+            ((STK)core).localAverageCustomerCountInSTK.addValues(((STK)core).customerscount,_timeCust);
+            ((STK)core).localAverageCustomerCountInSTK.timeOfLastChange = core.currentTime;
 
             ((STK)core).customerscount++;
 
             if (time != core.currentTime)
             {
-                return;
+                return;  //kontrola
             }
+
             var nextTime = ((STK)core).customerArrivalTimeGenerator.Next() + time;
             if (nextTime <= 24300)
             {
@@ -53,18 +55,24 @@ namespace DISS_SEM2.Events
             {
 
 
-               /* if (((STK)core).getCustomersCountInPaymentLine() > 0)
+                if (((STK)core).getCustomersCountInPaymentLine() > 0)
                 {
                     //tato situacia by nemala nikdy nastat
                     var paymentTime = ((STK)core).paymentTimeGenerator.Next() + time;
                     var paymentCustomer = ((STK)core).getCustomerInPaymentLine();
                     ((STK)core).removeCustomerFromPaymentLine();
+
+                    var _timeTechnic = core.currentTime - ((STK)core).localAverageFreeTechnicianCount.timeOfLastChange;
+                    ((STK)core).localAverageFreeTechnicianCount.addValues(((STK)core).getAvailableTechnicianCount(), _timeTechnic);
+                    ((STK)core).localAverageFreeTechnicianCount.setFinalTimeOfLastChange(core.currentTime);
+
                     technic.obsluhuje = true;
                     technic.customer_car = paymentCustomer;
+
                     var nextPayment = new Payment(core, paymentTime, paymentCustomer, technic, null);
                     core.AddEvent(nextPayment);
                 }
-                else*/
+                else
                 {
                     if (((STK)core).reserveParking())
                     {

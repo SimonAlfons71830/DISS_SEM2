@@ -38,6 +38,7 @@ namespace DISS_SEM2.Events
                 //payment
                 var paymentTime = ((STK)core).paymentTimeGenerator.Next() + time;
                 var payingCustomer = ((STK)core).getCustomerInPaymentLine();
+
                 technic.obsluhuje = true;
                 technic.customer_car = payingCustomer;
                 //!!!!!
@@ -52,9 +53,9 @@ namespace DISS_SEM2.Events
 
 
             //predtym ako ho vratim do free obsluhovania
-                var _timeAutomechanicBack = core.currentTime - ((STK)core).localAverageFreeAutomechanicCount.timeOfLastChange;
-                ((STK)core).localAverageFreeAutomechanicCount.addValues(((STK)core).getAvailableAutomechanicCount(), _timeAutomechanicBack);
-                ((STK)core).localAverageFreeAutomechanicCount.setFinalTimeOfLastChange(core.currentTime);
+             var _timeAutomechanicBack = core.currentTime - ((STK)core).localAverageFreeAutomechanicCount.timeOfLastChange;
+             ((STK)core).localAverageFreeAutomechanicCount.addValues(((STK)core).getAvailableAutomechanicCount(), _timeAutomechanicBack);
+             ((STK)core).localAverageFreeAutomechanicCount.setFinalTimeOfLastChange(core.currentTime);
             
 
             automechanic.obsluhuje = false;
@@ -63,13 +64,6 @@ namespace DISS_SEM2.Events
             //pozriet do garaze
             //ak je tam auto naplanujem sam seba
 
-            if (((STK)core).getAvailableAutomechanicCount() > 0)
-            {
-                var _timeAutomechanicGet = core.currentTime - ((STK)core).localAverageFreeAutomechanicCount.timeOfLastChange;
-                ((STK)core).localAverageFreeAutomechanicCount.addValues(((STK)core).getAvailableAutomechanicCount(), _timeAutomechanicGet);
-                ((STK)core).localAverageFreeAutomechanicCount.setFinalTimeOfLastChange(core.currentTime);
-            }
-
 
             var newAutomechanic = ((STK)core).getAvailableAutomechanic();
 
@@ -77,6 +71,10 @@ namespace DISS_SEM2.Events
             {
                 if (((STK)core).getCarsCountInGarage() > 0 )
                 {
+                    var _timeAutomechanicGet = core.currentTime - ((STK)core).localAverageFreeAutomechanicCount.timeOfLastChange;
+                    ((STK)core).localAverageFreeAutomechanicCount.addValues(((STK)core).getAvailableAutomechanicCount(), _timeAutomechanicGet);
+                    ((STK)core).localAverageFreeAutomechanicCount.setFinalTimeOfLastChange(core.currentTime);
+
                     var customerFromGarage = ((STK)core).getNextCarInGarage();
                     var newInspection = new StartInspection(core, time, customerFromGarage, null, newAutomechanic);
                     core.AddEvent(newInspection);

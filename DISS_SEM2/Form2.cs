@@ -45,7 +45,7 @@ namespace DISS_SEM2
 
         private void Form2_Load(object sender, EventArgs e)
         {
-            
+
            
         }
 
@@ -73,8 +73,8 @@ namespace DISS_SEM2
         private void startSimulation()
         {
             
-
             this._simCore.addObserver(this);
+
             _simCore.setSimulationTime(8 * 3600+1);
             
             this._simCore.Simulation((int)numericUpDown1.Value);
@@ -142,6 +142,7 @@ namespace DISS_SEM2
             this._simCore.resetAutomechanics();
             this._simCore.resetTechnicians();
             this._simCore.resetQueues();
+            this._simCore.customerscount = 0;
         }
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -151,7 +152,7 @@ namespace DISS_SEM2
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            if (thread1 != null || thread1.IsAlive)
+            if (thread1 != null)
             {
                 thread1.Interrupt();
             }
