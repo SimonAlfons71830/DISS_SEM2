@@ -98,7 +98,7 @@
             this.numericUpDown1.TabIndex = 1;
             this.numericUpDown1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.numericUpDown1.Value = new decimal(new int[] {
-            10000,
+            1000,
             0,
             0,
             0});
