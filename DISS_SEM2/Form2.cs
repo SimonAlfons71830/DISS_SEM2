@@ -52,6 +52,8 @@ namespace DISS_SEM2
         private void button1_Click(object sender, EventArgs e)
         {
             this.reset();
+            this._simCore.automechanics.Clear();
+            this._simCore.technicians.Clear();
 
             _simCore.createAutomechanics((int)numericUpDown3.Value);
             _simCore.createTechnicians((int)numericUpDown2.Value);
@@ -73,7 +75,8 @@ namespace DISS_SEM2
             
 
             this._simCore.addObserver(this);
-            _simCore.setSimulationTime(8 * 3600);
+            _simCore.setSimulationTime(8 * 3600+1);
+            
             this._simCore.Simulation((int)numericUpDown1.Value);
 
             if (this.IsHandleCreated)

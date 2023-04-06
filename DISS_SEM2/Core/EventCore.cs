@@ -22,10 +22,11 @@ namespace DISS_SEM2.Core
 
         public override void Before()
         {
+            //PPRED SIMULACIOU VYNULUJEM 
             if (((STK)this).getMode() == 2)
             {
                 //vynulovat globalne statistiky
-                ((STK)this).globalAverageCustomerTimeInSTK.resetStatistic();
+                ((STK)this).globalAverageCustomerTimeInSTK.resetStatistic();//1
                 ((STK)this).globalAverageCustomerCountEndOfDay.resetStatistic();
                 ((STK)this).globalAverageTimeToTakeOverCar.resetStatistic();
                 ((STK)this).globalAverageCustomerCountInLineToTakeOver.resetStatistic();
@@ -39,14 +40,19 @@ namespace DISS_SEM2.Core
 
         public override void After() 
         {
-            
+            if (replications != ((STK)this).globalAverageCustomerTimeInSTK.count)
+            {
+                return;
+            }
         }
 
         public override void BeforeReplication()
         {   //vynulovat lokalne statistiky
+            ((STK)this).todaysCustomers = 0;
             if (((STK)this).getMode() == 2)
             {//fast
                 ((STK)this).resetGarage();
+                
                 ((STK)this).resetTechnicians();
                 ((STK)this).resetAutomechanics();
                 ((STK)this).customerscount = 0;
@@ -64,7 +70,7 @@ namespace DISS_SEM2.Core
                 ((STK)this).localAverageCustomerCountInSTK.resetStatistic();
                 ((STK)this).localAverageCustomerCountEndOfDay.resetStatistic();
             }
-            ((STK)this).localAverageCustomerTimeInSTK.resetStatistic();
+            ((STK)this).localAverageCustomerTimeInSTK.resetStatistic(); //1
 
 
             this.timeline = new SimplePriorityQueue<Event, double>();
@@ -89,14 +95,20 @@ namespace DISS_SEM2.Core
 
             if (((STK)this).getMode() == 2)
             {//fast
-
-               /* if (this.timeline.Count != 0)
+                this.currentTime = maxTime;
+                ((STK)this).endCustomersWaiting();
+                var pomcustom = ((STK)this).todaysCustomers;
+                if (pomcustom != ((STK)this).localAverageCustomerTimeInSTK.count) 
                 {
-                    //dokonci 
-                }*/
+                    var pompom = ((STK)this).todaysCustomers - ((STK)this).customerscount; //celkovy - ti co nevysli zo systemu
+                    return;
+                }
+                var meanofstatI = ((STK)this).localAverageCustomerTimeInSTK.getMean(); //1
+                if (meanofstatI == -1)
+                {
+                    return; //?????
+                }
 
-                //nastavi finalny cas z ktoreho sa bude robit priemer
-                
                 ((STK)this).localAverageCustomerCountInLineToTakeOver.setFinalTimeOfLastChange(this.maxTime);
                 ((STK)this).localAverageFreeTechnicianCount.setFinalTimeOfLastChange(this.maxTime);
                 ((STK)this).localAverageFreeAutomechanicCount.setFinalTimeOfLastChange(this.maxTime);
@@ -108,13 +120,10 @@ namespace DISS_SEM2.Core
                 ((STK)this).endCustomersWaiting();
 
 
-                var meanofstatI = ((STK)this).localAverageCustomerTimeInSTK.getMean();
-                if (meanofstatI == -1)
-                {
-                    return; //?????
-                }
+                
 
-                ((STK)this).globalAverageCustomerTimeInSTK.addValues(meanofstatI);
+                ((STK)this).globalAverageCustomerTimeInSTK.addValues(meanofstatI);//1
+
                 ((STK)this).globalAverageTimeToTakeOverCar.addValues(((STK)this).localAverageTimeToTakeOverCar.getMean());
                 ((STK)this).globalAverageCustomerCountInLineToTakeOver.addValues(((STK)this).localAverageCustomerCountInLineToTakeOver.getMean());
                 ((STK)this).globalAverageFreeTechnicianCount.addValues(((STK)this).localAverageFreeTechnicianCount.getMean());

@@ -38,10 +38,12 @@ namespace DISS_SEM2.Events
                 //payment
                 var paymentTime = ((STK)core).paymentTimeGenerator.Next() + time;
                 var payingCustomer = ((STK)core).getCustomerInPaymentLine();
+                technic.obsluhuje = true;
+                technic.customer_car = payingCustomer;
+                //!!!!!
                 var newPayment = new Payment(core, paymentTime, payingCustomer, technic,null);
                 
-                technic.obsluhuje = true;
-                //!!!!!
+                
 
                 core.AddEvent(newPayment);
                 ((STK)core).removeCustomerFromPaymentLine();
@@ -78,8 +80,10 @@ namespace DISS_SEM2.Events
                     var customerFromGarage = ((STK)core).getNextCarInGarage();
                     var newInspection = new StartInspection(core, time, customerFromGarage, null, newAutomechanic);
                     core.AddEvent(newInspection);
+
                     newAutomechanic.obsluhuje = true;
                     newAutomechanic.customer_car = customerFromGarage;
+
                     ((STK)core).removeCarFromGarage();
                 }
             }

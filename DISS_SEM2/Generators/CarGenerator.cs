@@ -29,7 +29,7 @@ namespace DISS_SEM2.Generators
             {
                 return CarTypes.Personal;
             }
-            else if (genNumber < 86)
+            else if (genNumber < 0.86)
             {
                 return CarTypes.Van;
             }

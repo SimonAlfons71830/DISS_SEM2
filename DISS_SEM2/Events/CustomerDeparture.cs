@@ -16,9 +16,12 @@ namespace DISS_SEM2.Events
         public override void execute()
         {
             //statistics
-            var pom = time - customer.arrivalTime; 
-            
-            ((STK)core).localAverageCustomerTimeInSTK.addValues(time - customer.arrivalTime);
+            var pom = time - customer.arrivalTime;
+            var _timeindep = time;
+            var timeincore = core.currentTime;
+            ((STK)core).localAverageCustomerTimeInSTK.addValues(this.core.currentTime - this.customer.arrivalTime);
+
+
             //uvolni technika
             //naplanuje novu platbu
             //ak nikto nieje v rade tak naplanuje start takeovber
@@ -29,11 +32,8 @@ namespace DISS_SEM2.Events
             ((STK)core).localAverageFreeTechnicianCount.setFinalTimeOfLastChange(core.currentTime);
 
             technician.obsluhuje = false;
-            //pridali sme ho do volnych 
-
-
-
             technician.customer_car = null;
+            //pridali sme ho do volnych 
 
             /*if (((STK)core).getAvailableTechnicianCount() > 0)
             {
@@ -61,6 +61,7 @@ namespace DISS_SEM2.Events
                     ((STK)core).localAverageFreeTechnicianCount.setFinalTimeOfLastChange(core.currentTime);
 
                     technic.obsluhuje = true;
+                    technic.customer_car = paymentCustomer;
 
                     var newPayment = new Payment(core, paymentTime, paymentCustomer, technic, null);
                     core.AddEvent(newPayment);

@@ -20,6 +20,12 @@ namespace DISS_SEM2.Events
             //naplanuje departuje - uvolni technika
             //zakaznik je uz vymazany v endtakeover
 
+            if (technician.customer_car == null)
+            {
+                return;
+            }
+            technician.customer_car = customer;
+
             ((STK)core).removeCarFromParkingLot(customer);
             var newDeparture = new CustomerDeparture(core, time, customer, technician, null); //este ho posielam a potom vymazem
             core.AddEvent(newDeparture);

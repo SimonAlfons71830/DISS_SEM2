@@ -21,9 +21,15 @@ namespace DISS_SEM2.Events
             //automechanik je obsadeny
             //cas inspection
             //naplanovat end
-            automechanic.customer_car = customer;
-            
-            
+
+            //uz je nastvene
+            if (automechanic.obsluhuje == false)
+            {
+                return;
+            }
+            //automechanic.customer_car = customer;
+            //automechanic.obsluhuje = true;
+
             ((STK)core).freeParking(); //bez referencie - iba counter 
             double endsinspectionTime;
             if (customer.getCar().type == CarTypes.Personal)
@@ -81,6 +87,7 @@ namespace DISS_SEM2.Events
                         ((STK)core).localAverageFreeTechnicianCount.setFinalTimeOfLastChange(core.currentTime);
 
                         technic.obsluhuje = true;
+                        technic.customer_car = takeoverCustomer;
                         core.AddEvent(newTakeOver);
 
                         //stat

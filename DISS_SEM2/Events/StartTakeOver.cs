@@ -30,7 +30,7 @@ namespace DISS_SEM2.Events
             //zaparkujem do garaze
             //vyvolam end takeover - cas ten isty, technic ten isty, automechanik stale null
 
-            technician.customer_car = customer;
+            technician.customer_car = customer; //duplicitne ale to nevadi zatial
             ((STK)core).parkCarInGarage(customer);
             var endTakeover = new EndTakeOver(core, time, customer, technician, null);
             core.AddEvent(endTakeover);

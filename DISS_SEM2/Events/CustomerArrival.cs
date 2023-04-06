@@ -18,6 +18,7 @@ namespace DISS_SEM2.Events
 
         public override void execute()
         {
+            ((STK)core).todaysCustomers++;
             //prichod zakaznika vyvola dalsi prichod zakaznika - po 15 45 uz neplanujem
             //zistim freee technika
             //ak je free tak -> najprv paymentline 
@@ -28,8 +29,11 @@ namespace DISS_SEM2.Events
             ((STK)core).localAverageCustomerCountInSTK.addValues(((STK)core).customerscount);
 
             ((STK)core).customerscount++;
-            
 
+            if (time != core.currentTime)
+            {
+                return;
+            }
             var nextTime = ((STK)core).customerArrivalTimeGenerator.Next() + time;
             if (nextTime <= 24300)
             {
@@ -47,15 +51,16 @@ namespace DISS_SEM2.Events
 
             if (technic != null)
             {
-                
-                /*
-                if (((STK)core).getCustomersCountInPaymentLine() > 0)
+
+
+               /* if (((STK)core).getCustomersCountInPaymentLine() > 0)
                 {
                     //tato situacia by nemala nikdy nastat
                     var paymentTime = ((STK)core).paymentTimeGenerator.Next() + time;
                     var paymentCustomer = ((STK)core).getCustomerInPaymentLine();
                     ((STK)core).removeCustomerFromPaymentLine();
                     technic.obsluhuje = true;
+                    technic.customer_car = paymentCustomer;
                     var nextPayment = new Payment(core, paymentTime, paymentCustomer, technic, null);
                     core.AddEvent(nextPayment);
                 }

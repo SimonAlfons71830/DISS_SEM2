@@ -9,7 +9,7 @@ namespace DISS_SEM2
     public class Statistics
     {
         private double sum;
-        private double count;
+        public double count;
         private double sumOfSqaredValues;
 
         public Statistics()

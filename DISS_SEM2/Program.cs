@@ -19,18 +19,18 @@ namespace DISS_SEM2
         [STAThread]
         static void Main()
         {
-            /*
-            string fileName = "exp.txt";
+
+            /*string fileName = "triangular2.txt";
             SeedGenerator seedgen = new SeedGenerator();
-            Exponential exp = new Exponential(seedgen,12);
+            Triangular triangular = new Triangular(seedgen, 180, 695, 431);
             using (StreamWriter writer = new StreamWriter(fileName))
             {
-                for (int i = 0; i < 100000; i++)
+                for (int i = 0; i < 1000000; i++)
                 {
-                    writer.WriteLine(exp.Next());
+                    writer.WriteLine(triangular.Next());
                 }
-            }
-            */
+            }*/
+
 
             var stk = new STK();
             Application.EnableVisualStyles();

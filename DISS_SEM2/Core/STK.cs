@@ -16,6 +16,7 @@ namespace DISS_SEM2.Core
 {
     public class STK : EventCore
     {
+        public int todaysCustomers;
         List<ISTKObserver<STK>> _observers = new List<ISTKObserver<STK>>();
         private int speed;
         private double frequency;
@@ -74,6 +75,7 @@ namespace DISS_SEM2.Core
         public STK()
         {
             customerscount = 0;
+            todaysCustomers = 0;
 
             localAverageCustomerCountInSTK = new Statistics();
             localAverageCustomerTimeInSTK = new Statistics();
@@ -126,7 +128,7 @@ namespace DISS_SEM2.Core
             (46*60, 47*60, 0.15),
             (48*60, 51*60, 0.4),
             (52*60, 55*60, 0.25),
-            (56*60, 65, 0.05)
+            (56*60, 65*60, 0.05)
             };
             cargoCarInspectionGenerator = new EmpiricalDistribution(cargoRanges, this.seedGenerator);
             this.carTypeGenerator = new CarGenerator(this.seedGenerator);
@@ -657,10 +659,63 @@ namespace DISS_SEM2.Core
         {
             for (int i = 0; i < this.customersLineQ.Count; i++)
             {
-                //this.powerOfCustomerCountInSTK.Add(this.customersLineQ.Count);
-                var customer = this.customersLineQ.Dequeue();
-                this.localAverageCustomerTimeInSTK.addValues(this.currentTime - customer.arrivalTime);
+                var customerLeft = this.customersLineQ.Dequeue();
+                var pomTime = currentTime;
+                for (int j = 0; j < technicians.Count; j++)
+                {
+                    if (customerLeft == technicians[j].customer_car)
+                    {
+                        technicians[j].obsluhuje = false;
+                        technicians[j].customer_car = null;
+                    }
+                }
+                this.localAverageCustomerTimeInSTK.addValues(currentTime - customerLeft.arrivalTime);
             }
+            for (int i = 0; i < this.garageParkingSpaceQ.Count ; i++)
+            {
+                var customerleft = this.garageParkingSpaceQ.Dequeue();
+                var pomTime = currentTime;
+                for (int j = 0; j < technicians.Count; j++)
+                {
+                    if (customerleft== technicians[j].customer_car)
+                    {
+                        technicians[j].obsluhuje = false;
+                        technicians[j].customer_car = null;
+                    }
+                }
+                this.localAverageCustomerTimeInSTK.addValues(currentTime - customerleft.arrivalTime);
+            }
+            for (int i = 0; i < this.paymentLineQ.Count; i++)
+            {
+                var customerLeft = this.paymentLineQ.Dequeue();
+                for (int j = 0; j < technicians.Count; j++)
+                {
+                    if (customerLeft == technicians[j].customer_car)
+                    {
+                        technicians[j].obsluhuje = false;
+                        technicians[j].customer_car = null;
+                    }
+                }
+                var pomTime = currentTime;
+                this.localAverageCustomerTimeInSTK.addValues(pomTime - customerLeft.arrivalTime);
+            }
+            for (int i = 0; i < technicians.Count; i++)
+            {
+                if (technicians[i].obsluhuje)
+                {
+                    var pomcustomer = technicians[i].customer_car;
+                    this.localAverageCustomerTimeInSTK.addValues(currentTime - pomcustomer.arrivalTime);
+                }
+            }
+            for (int i = 0; i < automechanics.Count; i++)
+            {
+                if (automechanics[i].obsluhuje)
+                {
+                    var pomcustomer = automechanics[i].customer_car;
+                    this.localAverageCustomerTimeInSTK.addValues(currentTime-pomcustomer.arrivalTime);
+                }
+            }
+
         }
 
         public int notFinishedCustomers()

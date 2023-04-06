@@ -203,7 +203,7 @@ namespace DISS_SEM2
             _simCore.createAutomechanics((int)numericUpDown3.Value);
             _simCore.createTechnicians((int)numericUpDown2.Value);
 
-            var time = (int)numericUpDown4.Value * 3600 - 1;
+            var time = (int)numericUpDown4.Value * 3600;
             _simCore.setSimulationTime(time);
 
             paused = false;
