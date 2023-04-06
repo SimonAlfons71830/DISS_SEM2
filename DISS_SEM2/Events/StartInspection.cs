@@ -25,12 +25,13 @@ namespace DISS_SEM2.Events
             //uz je nastvene
             if (automechanic.obsluhuje == false)
             {
-                return;
+                return; //kontrola
             }
             //automechanic.customer_car = customer;
             //automechanic.obsluhuje = true;
 
             ((STK)core).freeParking(); //bez referencie - iba counter 
+
             double endsinspectionTime;
             if (customer.getCar().type == CarTypes.Personal)
             {
@@ -56,17 +57,27 @@ namespace DISS_SEM2.Events
             if (technic != null)
             {
 
-                
-                /*if (((STK)core).getCustomersCountInPaymentLine() > 0)
+
+                if (((STK)core).getCustomersCountInPaymentLine() > 0)
                 {
                     //payment
                     var paymentTime = ((STK)core).paymentTimeGenerator.Next() + time;
                     var payingCustomer = ((STK)core).getCustomerInPaymentLine();
+
+                    var _timeTechnic = core.currentTime - ((STK)core).localAverageFreeTechnicianCount.timeOfLastChange;
+                    ((STK)core).localAverageFreeTechnicianCount.addValues(((STK)core).getAvailableTechnicianCount(), _timeTechnic);
+                    ((STK)core).localAverageFreeTechnicianCount.setFinalTimeOfLastChange(core.currentTime);
+
                     var newPayment = new Payment(core, paymentTime, payingCustomer, technic, null);
+
+                    technic.obsluhuje = true;
+                    technic.customer_car = payingCustomer;
+
                     core.AddEvent(newPayment);
                     ((STK)core).removeCustomerFromPaymentLine();
                 }
-                else*/
+                else
+
                 if (((STK)core).getCustomersCountInLine() > 0) 
                 {
                     if (((STK)core).reserveParking())
