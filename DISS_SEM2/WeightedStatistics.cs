@@ -28,8 +28,9 @@ namespace DISS_SEM2
                 return -1;
             }
             else
-            {
-                return this.value / this.timeOfLastChange;
+            { 
+                var pom = this.value / this.timeOfLastChange;
+                return pom;
             }
             
         }

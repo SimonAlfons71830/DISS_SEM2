@@ -225,6 +225,7 @@ namespace DISS_SEM2
             this.Invoke((MethodInvoker)delegate
             {
                 label22.Text = (this._simCore.localAverageCustomerTimeInSTK.getMean() / 60).ToString("0.0000")+ " min";
+                label24.Text = (this._simCore.localAverageCustomerCountInLineToTakeOver.getMean()).ToString("0.0000");
             });
         }
 
@@ -245,13 +246,11 @@ namespace DISS_SEM2
             
         }
 
-        private void label22_Click(object sender, EventArgs e)
-        {
-
-        }
-
+       
         private void reset()
         {
+            this._simCore.localAverageCustomerCountInLineToTakeOver.resetStatistic();
+            this._simCore.localAverageCustomerTimeInSTK.resetStatistic();
             this._simCore.resetGarage();
             this._simCore.resetAutomechanics();
             this._simCore.resetTechnicians();
@@ -277,6 +276,19 @@ namespace DISS_SEM2
         }
         private bool thread1ShouldExist = false;
 
+        private void label24_Click(object sender, EventArgs e)
+        {
 
+        }
+
+        private void label4_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void numericUpDown2_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

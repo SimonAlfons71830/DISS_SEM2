@@ -21,7 +21,6 @@ namespace DISS_SEM2
             if (this.IsHandleCreated)
             {
 
-
                 this.Invoke((MethodInvoker)delegate
                 {
                     label3.Text = this._simCore.getActualReplication().ToString();
@@ -54,6 +53,18 @@ namespace DISS_SEM2
             this.reset();
             this._simCore.automechanics.Clear();
             this._simCore.technicians.Clear();
+            if (checkBox1.Checked)
+            {
+                this._simCore.setFixedSeedSim(true);
+                this._simCore.generateNumbersAgain();
+                //fixed seed
+            }
+            else
+            {
+                this._simCore.setFixedSeedSim(false);
+                this._simCore.generateNumbersAgain();
+            }
+
 
             _simCore.createAutomechanics((int)numericUpDown3.Value);
             _simCore.createTechnicians((int)numericUpDown2.Value);
@@ -158,6 +169,11 @@ namespace DISS_SEM2
             }
 
             base.OnFormClosing(e);
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

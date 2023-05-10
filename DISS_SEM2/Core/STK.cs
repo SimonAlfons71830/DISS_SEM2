@@ -16,14 +16,17 @@ namespace DISS_SEM2.Core
 {
     public class STK : EventCore
     {
+        private bool fixedSeed = false;
+
         public int todaysCustomers;
+
         List<ISTKObserver<STK>> _observers = new List<ISTKObserver<STK>>();
         private int speed;
         private double frequency;
         private int mode;
         //objectList - cakajuci zakaznici
         //should be queue
-        public SimplePriorityQueue<Customer,double> customersLineQ;
+        public SimplePriorityQueue<Customer, double> customersLineQ;
         private SimplePriorityQueue<Customer, double> paymentLineQ;
 
         public List<Technician> technicians;
@@ -87,12 +90,12 @@ namespace DISS_SEM2.Core
 
             globalAverageCustomerCountInSTK = new Statistics();
             globalAverageCustomerTimeInSTK = new Statistics();
-            globalAverageTimeToTakeOverCar = new Statistics() ;
+            globalAverageTimeToTakeOverCar = new Statistics();
             globalAverageCustomerCountInLineToTakeOver = new Statistics();
             globalAverageFreeTechnicianCount = new Statistics();
             globalAverageFreeAutomechanicCount = new Statistics();
             globalAverageCustomerCountEndOfDay = new Statistics();
-            
+
 
             this.customersLineQ = new SimplePriorityQueue<Customer, double>();
             this.paymentLineQ = new SimplePriorityQueue<Customer, double>();
@@ -102,13 +105,14 @@ namespace DISS_SEM2.Core
             this.obsluhuje = false;
             this.seedGenerator = new SeedGenerator();
             double _mi = 3600.0 / 23.0;
+
             this.customerArrivalTimeGenerator = new Exponential(this.seedGenerator, _mi);
             this.takeOverTimeGenerator = new Triangular(this.seedGenerator, 180, 695, 431);
             //this.carGenerator = new Random(this.seedGenerator.generate_seed());
             this.technicians = new List<Technician>();
             this._ids = 0;
 
-            this.automechanics = new List<Automechanic>();         
+            this.automechanics = new List<Automechanic>();
 
             garageParkingSpace = new List<Customer>();
             parkingLot = new List<Customer>();
@@ -195,7 +199,7 @@ namespace DISS_SEM2.Core
         public int getCustomersCountInLine()
         {
             return this.customersLineQ.Count();
-            
+
             //return this.customersLine.Count;
         }
 
@@ -289,14 +293,14 @@ namespace DISS_SEM2.Core
             return this.parkingLot.Remove(_customer_car);
         }
 
-        public void addObserver(ISTKObserver<STK> _stkObserver) 
+        public void addObserver(ISTKObserver<STK> _stkObserver)
         {
             _observers.Add(_stkObserver);
         }
 
         public void Notify()
-        { 
-            foreach(var _observer in _observers)
+        {
+            foreach (var _observer in _observers)
             {
                 _observer.refresh(this);
             }
@@ -330,7 +334,7 @@ namespace DISS_SEM2.Core
             return count;
         }
         public int getAllTechniciansCount()
-        { 
+        {
             return this.technicians.Count;
         }
 
@@ -352,14 +356,14 @@ namespace DISS_SEM2.Core
         }
 
         public void setFrequency(int _frequency)
-        { 
+        {
             this.frequency = _frequency;
         }
         internal double getFrequency()
         {
             return this.frequency;
         }
-        public void pomCarsCountPlus() 
+        public void pomCarsCountPlus()
         {
             this.CarsCountGarage++;
         }
@@ -414,7 +418,7 @@ namespace DISS_SEM2.Core
             return this.customersLineQ.ToList();
         }
 
-        public bool reserveParkingSpace(Customer customer_car) 
+        public bool reserveParkingSpace(Customer customer_car)
         {
             var parkingSpace = this.getAvailableParkingSpace();
             if (parkingSpace != null)
@@ -436,9 +440,9 @@ namespace DISS_SEM2.Core
                 }
             }
             return false;
-        
+
         }
-        public bool reserveParking() 
+        public bool reserveParking()
         {
             for (int i = 0; i < this.garage.Count; i++)
             {
@@ -450,7 +454,7 @@ namespace DISS_SEM2.Core
             }
             return false;
         }
-        public bool freeParking() 
+        public bool freeParking()
         {
             for (int i = 0; i < this.garage.Count; i++)
             {
@@ -473,11 +477,11 @@ namespace DISS_SEM2.Core
                     this.garage[i].free = true;
                     return true;
                 }
-            }  
+            }
             return false;
         }
 
-        public ParkingSpace getAvailableParkingSpace() 
+        public ParkingSpace getAvailableParkingSpace()
         {
             for (int i = 0; i < this.garage.Count; i++)
             {
@@ -501,7 +505,7 @@ namespace DISS_SEM2.Core
             return number;
         }
 
-        public void createTechnicians(int number) 
+        public void createTechnicians(int number)
         {
             for (int i = 0; i < number; i++)
             {
@@ -513,7 +517,7 @@ namespace DISS_SEM2.Core
 
         public void createAutomechanics(int number)
         {
-            
+
             for (int i = 0; i < number; i++)
             {
                 var automech = new Automechanic();
@@ -523,7 +527,7 @@ namespace DISS_SEM2.Core
         }
 
         public void setSimulationTime(int _time)
-        { 
+        {
             this._simulationTime = _time;
         }
 
@@ -560,7 +564,7 @@ namespace DISS_SEM2.Core
         public double getStatII()
         {
             var sec = this.globalAverageTimeToTakeOverCar.getMean();
-            var min = sec / 60; 
+            var min = sec / 60;
             return min;
         }
         /// <summary>
@@ -576,7 +580,7 @@ namespace DISS_SEM2.Core
         /// </summary>
         /// <returns></returns>
         public double getStatIV()
-        { 
+        {
             return this.globalAverageFreeTechnicianCount.getMean();
         }
 
@@ -585,7 +589,7 @@ namespace DISS_SEM2.Core
         /// </summary>
         /// <returns></returns>
         public double getStatV()
-        { 
+        {
             return this.globalAverageFreeAutomechanicCount.getMean();
         }
         public int getActualReplication()
@@ -603,7 +607,7 @@ namespace DISS_SEM2.Core
         }
 
         public double getStatVII()
-        { 
+        {
             return this.globalAverageCustomerCountEndOfDay.getMean();
         }
 
@@ -657,7 +661,8 @@ namespace DISS_SEM2.Core
 
         public void endCustomersWaiting()
         {
-            for (int i = 0; i < this.customersLineQ.Count; i++)
+            var pomcount = this.customersLineQ.Count;
+            for (int i = 0; i < pomcount; i++)
             {
                 var customerLeft = this.customersLineQ.Dequeue();
                 var pomTime = currentTime;
@@ -671,13 +676,14 @@ namespace DISS_SEM2.Core
                 }
                 this.localAverageCustomerTimeInSTK.addValues(currentTime - customerLeft.arrivalTime);
             }
-            for (int i = 0; i < this.garageParkingSpaceQ.Count ; i++)
+            var pomparkingspace = this.garageParkingSpaceQ.Count;
+            for (int i = 0; i < pomparkingspace; i++)
             {
                 var customerleft = this.garageParkingSpaceQ.Dequeue();
                 var pomTime = currentTime;
                 for (int j = 0; j < technicians.Count; j++)
                 {
-                    if (customerleft== technicians[j].customer_car)
+                    if (customerleft == technicians[j].customer_car)
                     {
                         technicians[j].obsluhuje = false;
                         technicians[j].customer_car = null;
@@ -685,7 +691,8 @@ namespace DISS_SEM2.Core
                 }
                 this.localAverageCustomerTimeInSTK.addValues(currentTime - customerleft.arrivalTime);
             }
-            for (int i = 0; i < this.paymentLineQ.Count; i++)
+            var pompaymentline = this.paymentLineQ.Count;
+            for (int i = 0; i < pompaymentline; i++)
             {
                 var customerLeft = this.paymentLineQ.Dequeue();
                 for (int j = 0; j < technicians.Count; j++)
@@ -699,6 +706,7 @@ namespace DISS_SEM2.Core
                 var pomTime = currentTime;
                 this.localAverageCustomerTimeInSTK.addValues(pomTime - customerLeft.arrivalTime);
             }
+
             for (int i = 0; i < technicians.Count; i++)
             {
                 if (technicians[i].obsluhuje)
@@ -712,7 +720,7 @@ namespace DISS_SEM2.Core
                 if (automechanics[i].obsluhuje)
                 {
                     var pomcustomer = automechanics[i].customer_car;
-                    this.localAverageCustomerTimeInSTK.addValues(currentTime-pomcustomer.arrivalTime);
+                    this.localAverageCustomerTimeInSTK.addValues(currentTime - pomcustomer.arrivalTime);
                 }
             }
 
@@ -722,6 +730,47 @@ namespace DISS_SEM2.Core
         {
             return this.customerscount;
         }
+
+        public void setFixedSeedSim(bool pom)
+        {
+            this.fixedSeed = pom;
+
+        }
+
+        public void generateNumbersAgain()
+        {
+            double _mi = 3600.0 / 23.0;
+
+            this.customerArrivalTimeGenerator = new Exponential(this.seedGenerator, _mi);
+
+            this.takeOverTimeGenerator = new Triangular(this.seedGenerator, 180, 695, 431);
+            //this.carGenerator = new Random(this.seedGenerator.generate_seed());
+
+            paymentTimeGenerator = new ContinuousEven(65, 177, this.seedGenerator); //<65,177)
+
+            personalCarInspectionGenerator = new DiscreteEven(31 * 60, 45 * 60, this.seedGenerator);
+
+            (int, int, double)[] vanRanges = {
+            (35*60, 37*60, 0.2),
+            (38 * 60, 40 * 60, 0.35),
+            (41*60, 47*60, 0.3),
+            (48*60, 52*60, 0.15)
+            };
+            vanCarInspectionGenerator = new EmpiricalDistribution(vanRanges, this.seedGenerator);
+
+            (int, int, double)[] cargoRanges = {
+            (37*60, 42*60, 0.05),
+            (43*60, 45*60, 0.1),
+            (46*60, 47*60, 0.15),
+            (48*60, 51*60, 0.4),
+            (52*60, 55*60, 0.25),
+            (56*60, 65*60, 0.05)
+            };
+            cargoCarInspectionGenerator = new EmpiricalDistribution(cargoRanges, this.seedGenerator);
+
+            this.carTypeGenerator = new CarGenerator(this.seedGenerator);
+        }
+        
     }
 
 }

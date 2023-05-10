@@ -81,11 +81,11 @@ namespace DISS_SEM2.Events
 
                             var newTakeover = new StartTakeOver(core, takeoverTime, takeoverCustomer, technic, null);
 
-
                             core.AddEvent(newTakeover);
 
                             //stat III
                             var _time = core.currentTime - ((STK)core).localAverageCustomerCountInLineToTakeOver.timeOfLastChange;
+                            var pomcusto = ((STK)core).getCustomersCountInLine();
                             ((STK)core).localAverageCustomerCountInLineToTakeOver.addValues(((STK)core).getCustomersCountInLine(), _time);
                             ((STK)core).localAverageCustomerCountInLineToTakeOver.setFinalTimeOfLastChange(core.currentTime);
 

@@ -10,12 +10,13 @@ namespace DISS_SEM2.Events
 {
     internal class ControlEvent: eventSTK
     {
-        public ControlEvent(EventCore _core, double _time, Customer _customer, Technician _technician, Automechanic _automechanic) : base(_core, _time, _customer, _technician, _automechanic)
+        public ControlEvent(EventCore _core, double _time, Customer _customer, Technician _technician, Automechanic _automechanic) :
+            base(_core, _time, _customer, _technician, _automechanic)
         {
         }
         public override void execute()
         {
-            //nap[anuje sa na kazdych 5 min
+            //naplanuje sa na kazdych 5 min
             var nextTime = 5 + time; // po sekunde
             //kontrolujem zakaznikov v rade na prevzatie auta
             var pocet = ((STK)core).getCustomersCountInLine();

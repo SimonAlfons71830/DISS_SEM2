@@ -34,12 +34,15 @@ namespace DISS_SEM2.Core
                 ((STK)this).globalAverageFreeAutomechanicCount.resetStatistic();
                 ((STK)this).globalAverageCustomerCountEndOfDay.resetStatistic();
                 ((STK)this).globalAverageCustomerCountEndOfDay.resetStatistic();
+
+                ((STK)this).globalAverageCustomerCountInSTK.resetStatistic();
             }
             
         }
 
         public override void After()
         {
+
         }
 
         public override void BeforeReplication()
@@ -58,7 +61,7 @@ namespace DISS_SEM2.Core
                 ((STK)this).CarsCountGarage = 0;
                 //((STK)this).resetQueues();
 
-                
+                ((STK)this).localAverageCustomerCountInLineToTakeOver.resetStatistic();
                 ((STK)this).localAverageTimeToTakeOverCar.resetStatistic();
                 ((STK)this).localAverageCustomerCountInLineToTakeOver.resetStatistic();
                 ((STK)this).localAverageFreeTechnicianCount.resetStatistic();
@@ -108,24 +111,19 @@ namespace DISS_SEM2.Core
 
                 //((STK)this).endCustomersWaiting();
 
-
-                
-
-                
-
                 ((STK)this).globalAverageTimeToTakeOverCar.addValues(((STK)this).localAverageTimeToTakeOverCar.getMean());
-                ((STK)this).globalAverageCustomerCountInLineToTakeOver.addValues(((STK)this).localAverageCustomerCountInLineToTakeOver.getMean());
+                var pomtime = ((STK)this).localAverageCustomerCountInLineToTakeOver.getMean();
+                ((STK)this).globalAverageCustomerCountInLineToTakeOver.addValues(pomtime);
                 ((STK)this).globalAverageFreeTechnicianCount.addValues(((STK)this).localAverageFreeTechnicianCount.getMean());
                 ((STK)this).globalAverageFreeAutomechanicCount.addValues(((STK)this).localAverageFreeAutomechanicCount.getMean());
                 ((STK)this).globalAverageCustomerCountEndOfDay.addValues(((STK)this).localAverageCustomerCountEndOfDay.getMean());
                 ((STK)this).globalAverageCustomerCountInSTK.addValues(((STK)this).localAverageCustomerCountInSTK.getMean());
                 ((STK)this).globalAverageCustomerCountEndOfDay.addValues(((STK)this).localAverageCustomerCountEndOfDay.getMean());
 
+                ((STK)this).customersLineQ.Clear();
+
                 ((STK)this).Notify();
             }
-            
-
-
         }
 
         public override void Replication()

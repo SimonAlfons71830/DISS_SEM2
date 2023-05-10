@@ -60,6 +60,8 @@
             this.label20 = new System.Windows.Forms.Label();
             this.label21 = new System.Windows.Forms.Label();
             this.label22 = new System.Windows.Forms.Label();
+            this.label23 = new System.Windows.Forms.Label();
+            this.label24 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
@@ -133,6 +135,7 @@
             this.label4.Size = new System.Drawing.Size(44, 16);
             this.label4.TabIndex = 11;
             this.label4.Text = "label4";
+            this.label4.Click += new System.EventHandler(this.label4_Click);
             // 
             // label3
             // 
@@ -311,6 +314,7 @@
             0,
             0,
             0});
+            this.numericUpDown2.ValueChanged += new System.EventHandler(this.numericUpDown2_ValueChanged);
             // 
             // numericUpDown3
             // 
@@ -411,13 +415,33 @@
             this.label22.Size = new System.Drawing.Size(51, 16);
             this.label22.TabIndex = 44;
             this.label22.Text = "label22";
-            this.label22.Click += new System.EventHandler(this.label22_Click);
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(50, 358);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(223, 16);
+            this.label23.TabIndex = 45;
+            this.label23.Text = "Average number of customers in line";
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(289, 358);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(51, 16);
+            this.label24.TabIndex = 46;
+            this.label24.Text = "label24";
+            this.label24.Click += new System.EventHandler(this.label24_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1267, 711);
+            this.Controls.Add(this.label24);
+            this.Controls.Add(this.label23);
             this.Controls.Add(this.label22);
             this.Controls.Add(this.label21);
             this.Controls.Add(this.label20);
@@ -498,6 +522,8 @@
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.Label label24;
     }
 }
 
